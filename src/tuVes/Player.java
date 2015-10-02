@@ -2,7 +2,6 @@ package tuVes;
 
 public interface Player {
 
-	public insertUser(nick, email, name);
-	public blablabla
+	public insertUser(StringTokenizer nick, email, name);
 	
 }
