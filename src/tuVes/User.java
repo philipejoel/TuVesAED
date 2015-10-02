@@ -2,9 +2,9 @@ package tuVes;
 
 
 public interface User {
-	public void addVideoToUser();
-	public void addVideoToFavourite();
-	public void addVideoToHistory();
+	public void addVideo(Video video);
+	public void addVideoToFavourite(Video video);
+	public void addVideoToHistory(Video video);
 	//public Iterator<String> historyOfViewedVideosIterator();
 	public String historyOfViewedVideos();
 	//public Iterator<String> favouriteVideosIterator();
