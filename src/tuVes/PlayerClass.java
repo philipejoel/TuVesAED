@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import dataStructures.AlreadyDisabledVideoException;
+import dataStructures.DisabledVideoException;
 import dataStructures.EmptyHistoryException;
 import dataStructures.InvalidLengthException;
 import dataStructures.NoSuchUserException;
@@ -43,30 +43,30 @@ public class PlayerClass implements Player {
 
 	
 	public void disableVideo(StringTokenizer idVideo) 
-			throws NoSuchVideoException, AlreadyDisabledVideoException{
+			throws NoSuchVideoException, DisabledVideoException{
 		if (!videosById.containsKey(idVideo))
 			throw new NoSuchVideoException();
 		else if (videosById.get(idVideo).isVideoDisabled())
-			throw new AlreadyDisabledVideoException();
+			throw new DisabledVideoException();
 		else
 			videosById.get(idVideo).disableVideo();
 	}
 
 	public void playVideo(StringTokenizer idVideo, StringTokenizer nick) 
-			throws NoSuchVideoException, NoSuchUserException, AlreadyDisabledVideoException {
+			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException {
 		if (!videosById.containsKey(idVideo))
 			throw new NoSuchVideoException();
 		else if (!usersByNick.containsKey(nick))
 			throw new NoSuchUserException();
 		else if (videosById.get(idVideo).isVideoDisabled())
-			throw new AlreadyDisabledVideoException();
+			throw new DisabledVideoException();
 		else
 			usersByNick.get(nick).addVideoToHistory(videosById.get(idVideo));
 	}
 
 	public Iterator<Video> listHistory(StringTokenizer nick)
 			throws NoSuchUserException, EmptyHistoryException {
-		if (usersByNick.containsKey(nick))
+		if (!usersByNick.containsKey(nick))
 			throw new NoSuchUserException();
 		else
 			return usersByNick.get(nick).viewedVideosIterator();
@@ -75,16 +75,23 @@ public class PlayerClass implements Player {
 	@Override
 	public void removeHistory(StringTokenizer nick)
 			throws NoSuchUserException{
-		if (usersByNick.containsKey(nick))
+		if (!usersByNick.containsKey(nick))
 			throw new NoSuchUserException();
 		else
 			usersByNick.get(nick).removeViewedHistory();
 	}
 
 	@Override
-	public void addVideoToFavourites(StringTokenizer idVideo, StringTokenizer nick) {
-		// TODO Auto-generated method stub
-
+	public void addVideoToFavourites(StringTokenizer idVideo, StringTokenizer nick) 
+			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException{
+		if (!videosById.containsKey(idVideo))
+			throw new NoSuchVideoException();
+		else if (!usersByNick.containsKey(nick))
+			throw new NoSuchUserException();
+		else if (videosById.get(idVideo).isVideoDisabled())
+			throw new DisabledVideoException();
+		else
+			usersByNick.get(nick).addVideoToFavourite(videosById.get(idVideo));
 	}
 
 	@Override
