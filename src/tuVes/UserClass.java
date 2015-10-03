@@ -20,31 +20,30 @@ public class UserClass implements User {
 	
 	@Override
 	public void addVideo(Video video) {
-		// TODO Auto-generated method stub
 		this.videos = video;
 	}
 
 	@Override
 	public void addVideoToFavourite(Video video) {
-		// TODO Auto-generated method stub
 		this.favouriteVideos = video;
 	}
 
 	@Override
 	public void addVideoToHistory(Video video) {
-		// TODO Auto-generated method stub
 		viewedHistroy.add(video);
 	}
 
 	@Override
 	public String historyOfViewedVideos() {
-		// TODO Auto-generated method stub
-		return null;
+		String message = "";
+		for(Video video : viewedHistroy){
+			message += video.getVideoInfo();
+		}
+		return message;
 	}
 
 	@Override
 	public String favouriteVideos() {
-		// TODO Auto-generated method stub
 		return this.favouriteVideos.getVideoInfo();
 	}
 

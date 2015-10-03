@@ -55,7 +55,7 @@ public class VideoClass implements Video {
 	
 	public String getVideoInfo(){
 		return (getIdVideo() + " " + getTitle() +  " " +
-	getLength() +  " " + getStatus());
+	getLength() +  " " + getStatus()+"\n");
 	}
 
 
