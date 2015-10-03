@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import dataStructures.AlreadyDisabledVideoException;
+import dataStructures.InvalidLengthException;
 import dataStructures.NoSuchUserException;
 import dataStructures.NoSuchVideoException;
 
@@ -22,20 +23,26 @@ public class PlayerClass implements Player {
 	
 	
 
-	public void insertUser(StringTokenizer nick, StringTokenizer email, String name) {
+	public void insertUser(StringTokenizer nick, StringTokenizer email, String name){
 		User u = new UserClass(nick, email, name);
 		usersByNick.put(nick, u);
 	}
-	public void insertVideo(StringTokenizer idVideo, StringTokenizer nick, StringTokenizer url, long length,String title) {
-		Video v = new VideoClass(idVideo, title, url, length);
-		videosById.put(idVideo, v);
-
+	public void insertVideo(StringTokenizer idVideo, StringTokenizer nick, StringTokenizer url, long length,String title)
+			throws NoSuchUserException, InvalidLengthException {
+		if (!usersByNick.containsKey(nick))
+			throw new NoSuchUserException();
+		else if ((length%1 != 0) || (length<=0))
+			throw new InvalidLengthException();
+		else{
+			Video v = new VideoClass(idVideo, title, url, length);
+			videosById.put(idVideo, v);
+		}
 	}
 
 	
 	public void disableVideo(StringTokenizer idVideo) 
 			throws NoSuchVideoException, AlreadyDisabledVideoException{
-		if (videosById.containsKey(idVideo))
+		if (!videosById.containsKey(idVideo))
 			throw new NoSuchVideoException();
 		else if (videosById.get(idVideo).isVideoDisabled())
 			throw new AlreadyDisabledVideoException();
@@ -45,9 +52,9 @@ public class PlayerClass implements Player {
 
 	public void playVideo(StringTokenizer idVideo, StringTokenizer nick) 
 			throws NoSuchVideoException, NoSuchUserException, AlreadyDisabledVideoException {
-		if (videosById.containsKey(idVideo))
+		if (!videosById.containsKey(idVideo))
 			throw new NoSuchVideoException();
-		else if (usersByNick.containsKey(nick))
+		else if (!usersByNick.containsKey(nick))
 			throw new NoSuchUserException();
 		else if (videosById.get(idVideo).isVideoDisabled())
 			throw new AlreadyDisabledVideoException();
