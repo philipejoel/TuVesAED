@@ -1,6 +1,7 @@
 package tuVes;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -62,15 +63,17 @@ public class PlayerClass implements Player {
 			usersByNick.get(nick).addVideoToHistory(videosById.get(idVideo));
 	}
 
-	public String listHistory() {
-		
-		return null;
+	public Iterator<Video> listHistory(StringTokenizer nick)
+			throws NoSuchUserException, EmptyHistoryException {
+		if (usersByNick.containsKey(nick))
+			throw new NoSuchUserException();
+		else
+			return usersByNick.get(nick).viewedVideosIterator();
 	}
 
 	@Override
 	public void removeHistory(StringTokenizer nick) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override

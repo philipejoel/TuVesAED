@@ -1,5 +1,6 @@
 package tuVes;
 
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import dataStructures.AlreadyDisabledVideoException;
@@ -17,7 +18,8 @@ public interface Player {
 	public void playVideo(StringTokenizer idVide, StringTokenizer nick)
 			throws NoSuchVideoException, NoSuchUserException, AlreadyDisabledVideoException ;
 	//public Iterator<String> listHistoryIterator(StringTokenizer nick);
-	public String listHistory();
+	public Iterator<Video> listHistory(StringTokenizer nick)
+			throws NoSuchUserException, EmptyHistoryException;
 	public void removeHistory(StringTokenizer nick);
 	public void addVideoToFavourites(StringTokenizer idVideo, StringTokenizer nick);
 	public void removeVideoFromFavourites(StringTokenizer idVideo, StringTokenizer nick);

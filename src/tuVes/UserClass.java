@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import dataStructures.EmptyHistoryException;
+
 public class UserClass implements User {
 	
 	public StringTokenizer nick;
@@ -35,8 +37,12 @@ public class UserClass implements User {
 	}
 
 	@Override
-	public Iterator<Video> viewedVideosIterator() {
-		return viewedHistroy.iterator();
+	public Iterator<Video> viewedVideosIterator() 
+			throws EmptyHistoryException {
+		if(viewedHistroy.isEmpty())
+			throw new EmptyHistoryException();
+		else
+			return viewedHistroy.iterator();	
 	}
 
 	@Override
