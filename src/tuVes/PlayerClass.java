@@ -73,8 +73,12 @@ public class PlayerClass implements Player {
 	}
 
 	@Override
-	public void removeHistory(StringTokenizer nick) {
-		// TODO Auto-generated method stub
+	public void removeHistory(StringTokenizer nick)
+			throws NoSuchUserException{
+		if (usersByNick.containsKey(nick))
+			throw new NoSuchUserException();
+		else
+			usersByNick.get(nick).removeViewedHistory();
 	}
 
 	@Override

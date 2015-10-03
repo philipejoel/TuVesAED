@@ -50,4 +50,9 @@ public class UserClass implements User {
 		return this.favouriteVideos.getVideoInfo();
 	}
 
+	@Override
+	public void removeViewedHistory() {
+		this.viewedHistroy.clear();
+	}
+
 }

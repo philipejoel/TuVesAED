@@ -21,7 +21,8 @@ public interface Player {
 	//public Iterator<String> listHistoryIterator(StringTokenizer nick);
 	public Iterator<Video> listHistory(StringTokenizer nick)
 			throws NoSuchUserException, EmptyHistoryException;
-	public void removeHistory(StringTokenizer nick);
+	public void removeHistory(StringTokenizer nick) 
+			throws NoSuchUserException;
 	public void addVideoToFavourites(StringTokenizer idVideo, StringTokenizer nick);
 	public void removeVideoFromFavourites(StringTokenizer idVideo, StringTokenizer nick);
 	//public Iterator<String> listFavouritesIterator(StringTokenizer nick);

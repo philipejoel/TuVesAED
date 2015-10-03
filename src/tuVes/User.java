@@ -13,4 +13,5 @@ public interface User {
 			throws EmptyHistoryException;
 	//public Iterator<String> favouriteVideosIterator();
 	public String favouriteVideos();
+	public void removeViewedHistory();
 }
