@@ -1,5 +1,11 @@
 package tuVes;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,6 +14,8 @@ import java.util.StringTokenizer;
 import dataStructures.DisabledVideoException;
 import dataStructures.EmptyHistoryException;
 import dataStructures.InvalidLengthException;
+import dataStructures.NoFavouriteVideoException;
+import dataStructures.NoFavouritesException;
 import dataStructures.NoSuchUserException;
 import dataStructures.NoSuchVideoException;
 
@@ -15,7 +23,7 @@ public class PlayerClass implements Player {
 
 	private Map<StringTokenizer, User> usersByNick;
 	private Map<StringTokenizer, Video> videosById;
-	
+	//update save and load after tag's problem solved
 	
 	
 	public PlayerClass(){
@@ -95,15 +103,27 @@ public class PlayerClass implements Player {
 	}
 
 	@Override
-	public void removeVideoFromFavourites(StringTokenizer idVideo, StringTokenizer nick) {
-		// TODO Auto-generated method stub
-
+	public void removeVideoFromFavourites(StringTokenizer idVideo, StringTokenizer nick) 
+			throws NoSuchVideoException, NoSuchUserException, NoFavouriteVideoException {
+		if (!videosById.containsKey(idVideo))
+			throw new NoSuchVideoException();
+		else if (!usersByNick.containsKey(nick))
+			throw new NoSuchUserException();
+		else if (!usersByNick.get(nick).isFavourite(idVideo))
+			throw new NoFavouriteVideoException();
+		else
+			usersByNick.get(nick).removeVideoFromFavourite(idVideo);
 	}
 
 	@Override
-	public String listFavourites() {
-		// TODO Auto-generated method stub
-		return null;
+	public String listFavourites(StringTokenizer nick) 
+			throws NoSuchUserException, NoFavouritesException{
+		if (!usersByNick.containsKey(nick))
+			throw new NoSuchUserException();
+		else if (!usersByNick.get(nick).hasFavourite())
+			throw new NoFavouritesException();
+		else
+			return usersByNick.get(nick).favouriteVideos();
 	}
 
 	@Override
@@ -124,16 +144,19 @@ public class PlayerClass implements Player {
 
 	}
 
-	@Override
-	public void load() {
-		// TODO Auto-generated method stub
-
+	@SuppressWarnings("unchecked")
+	public void load(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException{
+		ObjectInputStream file = new ObjectInputStream(new FileInputStream(fileName));
+		usersByNick = (Map<StringTokenizer, User>) file.readObject();
+		videosById = (Map<StringTokenizer, Video>) file.readObject();
+		file.close();
 	}
 
-	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-
+	public void save(String fileName)  throws IOException{
+		ObjectOutputStream file = new ObjectOutputStream(new FileOutputStream(fileName));
+		file.writeObject(usersByNick);
+		file.writeObject(videosById);
+		file.flush();
+		file.close();
 	}
-
 }

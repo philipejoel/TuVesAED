@@ -35,6 +35,10 @@ public class UserClass implements User {
 	public void addVideoToHistory(Video video) {
 		viewedHistroy.add(video);
 	}
+	
+	public boolean isFavourite(StringTokenizer idVideo){
+		return favouriteVideos.getIdVideo().equals(idVideo);
+	}
 
 	@Override
 	public Iterator<Video> viewedVideosIterator() 
@@ -54,5 +58,16 @@ public class UserClass implements User {
 	public void removeViewedHistory() {
 		this.viewedHistroy.clear();
 	}
+	
+	public boolean hasFavourite(){
+		return (favouriteVideos != null);
+	}
 
+	@Override
+	public void removeVideoFromFavourite(StringTokenizer idVideo) {
+		// TODO Auto-generated method stub
+		favouriteVideos = null;
+	}
+
+	
 }
