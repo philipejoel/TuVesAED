@@ -1,14 +1,18 @@
 package tuVes;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import dataStructures.AlreadyDisabledVideoException;
+import dataStructures.NoSuchUserException;
+import dataStructures.NoSuchVideoException;
 
 public class PlayerClass implements Player {
 
 	private Map<StringTokenizer, User> usersByNick;
 	private Map<StringTokenizer, Video> videosById;
+	
 	
 	
 	public PlayerClass(){
@@ -17,33 +21,42 @@ public class PlayerClass implements Player {
 	}
 	
 	
-	
+
 	public void insertUser(StringTokenizer nick, StringTokenizer email, String name) {
 		User u = new UserClass(nick, email, name);
 		usersByNick.put(nick, u);
 	}
-
 	public void insertVideo(StringTokenizer idVideo, StringTokenizer nick, StringTokenizer url, long length,String title) {
 		Video v = new VideoClass(idVideo, title, url, length);
 		videosById.put(idVideo, v);
 
 	}
 
-	@Override
-	public void disableVideo(StringTokenizer idVideo) {
-		// TODO Auto-generated method stub
-
+	
+	public void disableVideo(StringTokenizer idVideo) 
+			throws NoSuchVideoException, AlreadyDisabledVideoException{
+		if (videosById.containsKey(idVideo))
+			throw new NoSuchVideoException();
+		else if (videosById.get(idVideo).isVideoDisabled())
+			throw new AlreadyDisabledVideoException();
+		else
+			videosById.get(idVideo).disableVideo();
 	}
 
-	@Override
-	public void playVideo(StringTokenizer idVide, StringTokenizer nick) {
-		// TODO Auto-generated method stub
-
+	public void playVideo(StringTokenizer idVideo, StringTokenizer nick) 
+			throws NoSuchVideoException, NoSuchUserException, AlreadyDisabledVideoException {
+		if (videosById.containsKey(idVideo))
+			throw new NoSuchVideoException();
+		else if (usersByNick.containsKey(nick))
+			throw new NoSuchUserException();
+		else if (videosById.get(idVideo).isVideoDisabled())
+			throw new AlreadyDisabledVideoException();
+		else
+			usersByNick.get(nick).addVideoToHistory(videosById.get(idVideo));
 	}
 
-	@Override
 	public String listHistory() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

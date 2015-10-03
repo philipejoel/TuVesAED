@@ -2,12 +2,18 @@ package tuVes;
 
 import java.util.StringTokenizer;
 
+import dataStructures.AlreadyDisabledVideoException;
+import dataStructures.NoSuchUserException;
+import dataStructures.NoSuchVideoException;
+
 public interface Player {
 
 	public void insertUser(StringTokenizer nick, StringTokenizer email, String name);
 	public void insertVideo(StringTokenizer idVideo, StringTokenizer nick, StringTokenizer URL, long length, String title);
-	public void disableVideo(StringTokenizer idVideo);
-	public void playVideo(StringTokenizer idVide, StringTokenizer nick);
+	public void disableVideo(StringTokenizer idVideo) 
+			throws NoSuchVideoException, AlreadyDisabledVideoException;
+	public void playVideo(StringTokenizer idVide, StringTokenizer nick)
+			throws NoSuchVideoException, NoSuchUserException, AlreadyDisabledVideoException ;
 	//public Iterator<String> listHistoryIterator(StringTokenizer nick);
 	public String listHistory();
 	public void removeHistory(StringTokenizer nick);
