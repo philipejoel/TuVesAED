@@ -1,6 +1,7 @@
 package tuVes;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
 public class UserClass implements User {
@@ -34,12 +35,8 @@ public class UserClass implements User {
 	}
 
 	@Override
-	public String historyOfViewedVideos() {
-		String message = "";
-		for(Video video : viewedHistroy){
-			message += video.getVideoInfo();
-		}
-		return message;
+	public Iterator<Video> viewedVideosIterator() {
+		return viewedHistroy.iterator();
 	}
 
 	@Override
