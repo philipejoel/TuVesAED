@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import dataStructures.AlreadyDisabledVideoException;
+import dataStructures.EmptyHistoryException;
 import dataStructures.InvalidLengthException;
 import dataStructures.NoSuchUserException;
 import dataStructures.NoSuchVideoException;
