@@ -1,10 +1,11 @@
 package tuVes;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Stack; //Change to dataStructures.Stack later
 import java.util.StringTokenizer;
 
-import dataStructures.EmptyHistoryException;
+import exceptions.EmptyHistoryException;
+
 
 public class UserClass implements User {
 	
@@ -13,7 +14,7 @@ public class UserClass implements User {
 	public StringTokenizer email;
 	public Video videos;
 	public Video favouriteVideos;
-	public ArrayList<Video> viewedHistroy;
+	public Stack<Video> viewedHistroy;
 	
 	public UserClass(StringTokenizer nick, StringTokenizer email, String name){
 		this.nick = nick;
@@ -33,7 +34,7 @@ public class UserClass implements User {
 
 	@Override
 	public void addVideoToHistory(Video video) {
-		viewedHistroy.add(video);
+		viewedHistroy.push(video);
 	}
 	
 	public boolean isFavourite(StringTokenizer idVideo){

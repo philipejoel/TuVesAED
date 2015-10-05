@@ -5,13 +5,15 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import dataStructures.DisabledVideoException;
-import dataStructures.EmptyHistoryException;
-import dataStructures.InvalidLengthException;
-import dataStructures.NoFavouriteVideoException;
-import dataStructures.NoFavouritesException;
-import dataStructures.NoSuchUserException;
-import dataStructures.NoSuchVideoException;
+import exceptions.DisabledVideoException;
+import exceptions.EmptyHistoryException;
+import exceptions.InvalidLengthException;
+import exceptions.NoFavouriteVideoException;
+import exceptions.NoFavouritesException;
+import exceptions.NoSuchTagException;
+import exceptions.NoSuchUserException;
+import exceptions.NoSuchVideoException;
+import exceptions.NoTagsInVideoException;
 
 public interface Player {
 
@@ -36,8 +38,10 @@ public interface Player {
 			throws NoSuchUserException, NoFavouritesException;
 	public void addTagToVideo(StringTokenizer idVideo, StringTokenizer tag);
 	//public Iterator<String> listTagsIterator(StringTokenizer idVideo);
-	public String listTags();
-	public void searchTag(StringTokenizer tag);
+	public StringTokenizer listTags(StringTokenizer idVideo) 
+			throws NoSuchVideoException, NoTagsInVideoException;
+	public String searchTag(StringTokenizer tag) 
+			throws NoSuchTagException;
 	public void load(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException;
 	public void save(String fileName)  throws IOException;
 	

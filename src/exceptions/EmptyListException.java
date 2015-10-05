@@ -1,4 +1,4 @@
-package dataStructures;
+package exceptions;
 
 public class EmptyListException extends RuntimeException
 {

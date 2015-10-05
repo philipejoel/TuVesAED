@@ -20,39 +20,36 @@ public class VideoClass implements Video {
 		tag = null;
 		this.length = length;
 	}
-	
 	public StringTokenizer getIdVideo(){
 		return idVideo;
 	}
-	
 	public String getTitle(){
 		return title;
 	}
-	
 	public long getLength(){
 		return length;
 	}
-	
 	public String getStatus(){
 		return isDisabled? "inactivo" : "activo";
 	}
-	
 	public void disableVideo() {
 		isDisabled = true;
 	}
-
 	public boolean isVideoDisabled() {
 		return isDisabled;
 	}
-
 	public void addTagToVideo(StringTokenizer tag) {
 		this.tag = tag;
 	}
-
+	public boolean hasTags(){
+		return (tag != null);
+	}
+	public StringTokenizer getTags(){
+		return tag;
+	}
 	public StringTokenizer listTags() {
 		return tag;
 	}
-	
 	public String getVideoInfo(){
 		return (getIdVideo() + " " + getTitle() +  " " +
 	getLength() +  " " + getStatus()+"\n");

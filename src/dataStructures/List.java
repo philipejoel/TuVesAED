@@ -2,6 +2,9 @@ package dataStructures;
 
 import java.io.Serializable;
 
+import exceptions.EmptyListException;
+import exceptions.InvalidPositionException;
+
 public interface List<E> extends Serializable
 {
 
@@ -60,5 +63,6 @@ public interface List<E> extends Serializable
     // Otherwise, returns false.
     boolean remove( E element );
 
+	void clear();
 }   
 

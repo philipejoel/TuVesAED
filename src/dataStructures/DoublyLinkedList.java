@@ -1,5 +1,8 @@
 package dataStructures;
 
+import exceptions.EmptyListException;
+import exceptions.InvalidPositionException;
+
 public class DoublyLinkedList<E> implements List<E>
 {   
 
@@ -302,6 +305,13 @@ public class DoublyLinkedList<E> implements List<E>
     }
 
 
+	@Override
+	public void clear() 
+	{
+		head = null;
+        tail = null;
+        currentSize = 0;		
+	}
 }   
 
 

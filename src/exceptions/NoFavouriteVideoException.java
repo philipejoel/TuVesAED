@@ -1,4 +1,4 @@
-package dataStructures;
+package exceptions;
 
 public class NoFavouriteVideoException extends Exception {
     static final long serialVersionUID = 0L;

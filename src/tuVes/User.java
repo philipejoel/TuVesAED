@@ -3,7 +3,7 @@ package tuVes;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import dataStructures.EmptyHistoryException;
+import exceptions.EmptyHistoryException;
 
 public interface User {
 	public void addVideo(Video video);

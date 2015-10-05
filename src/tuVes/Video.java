@@ -10,6 +10,8 @@ public interface Video {
 	public void disableVideo();
 	public boolean isVideoDisabled();
 	public void addTagToVideo(StringTokenizer tag);
+	public boolean hasTags();
+	public StringTokenizer getTags();
 	//public Iterator<String> listTagsIterator();
 	public StringTokenizer listTags();
 	public String getVideoInfo();
