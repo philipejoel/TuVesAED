@@ -38,6 +38,8 @@ public class PlayerClass implements Player {
 	
 	
 	public void insertUser(StringTokenizer nick, StringTokenizer email, String name){
+		/*if (usersByNick.containsKey(nick))
+			throw new UserAlreadyExistsException();*/    //not needed yet
 		User u = new UserClass(nick, email, name);
 		usersByNick.put(nick, u);
 	}
@@ -50,6 +52,7 @@ public class PlayerClass implements Player {
 		else{
 			Video v = new VideoClass(idVideo, title, url, length);
 			videosById.put(idVideo, v);
+			usersByNick.get(nick).addVideo(v);
 		}
 	}
 	public void disableVideo(StringTokenizer idVideo) 
@@ -76,6 +79,8 @@ public class PlayerClass implements Player {
 			throws NoSuchUserException, EmptyHistoryException {
 		if (!usersByNick.containsKey(nick))
 			throw new NoSuchUserException();
+		else if (!usersByNick.get(nick).hasHistory())
+			throw new EmptyHistoryException();
 		else
 			return usersByNick.get(nick).viewedVideosIterator();
 	}
@@ -121,10 +126,16 @@ public class PlayerClass implements Player {
 		else
 			return usersByNick.get(nick).favouriteVideos();
 	}
-	public void addTagToVideo(StringTokenizer idVideo, StringTokenizer tag) {
-		this.tag = tag;
-		videosById.get(idVideo).addTagToVideo(tag);
-		
+	public void addTagToVideo(StringTokenizer idVideo, StringTokenizer tag) 
+			throws NoSuchVideoException, DisabledVideoException {
+		if(!videosById.containsKey(idVideo))
+			throw new NoSuchVideoException();
+		else if(videosById.get(idVideo).isVideoDisabled())
+			throw new DisabledVideoException();
+		else{
+			this.tag = tag;
+			videosById.get(idVideo).addTagToVideo(tag);	
+		}
 	}
 	public StringTokenizer listTags(StringTokenizer idVideo) 
 			throws NoSuchVideoException, NoTagsInVideoException{

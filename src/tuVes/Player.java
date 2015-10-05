@@ -36,7 +36,8 @@ public interface Player {
 	//public Iterator<String> listFavouritesIterator(StringTokenizer nick);
 	public String listFavourites(StringTokenizer nick) 
 			throws NoSuchUserException, NoFavouritesException;
-	public void addTagToVideo(StringTokenizer idVideo, StringTokenizer tag);
+	public void addTagToVideo(StringTokenizer idVideo, StringTokenizer tag) 
+			throws NoSuchVideoException, DisabledVideoException;
 	//public Iterator<String> listTagsIterator(StringTokenizer idVideo);
 	public StringTokenizer listTags(StringTokenizer idVideo) 
 			throws NoSuchVideoException, NoTagsInVideoException;

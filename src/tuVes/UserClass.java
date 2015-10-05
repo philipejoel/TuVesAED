@@ -60,6 +60,10 @@ public class UserClass implements User {
 		this.viewedHistroy.clear();
 	}
 	
+	public boolean hasHistory(){
+		return viewedHistroy.isEmpty();
+	}
+	
 	public boolean hasFavourite(){
 		return (favouriteVideos != null);
 	}
