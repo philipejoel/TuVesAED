@@ -245,7 +245,7 @@ public class Main {
 	private static void	 processVideoTagList(Scanner in, PlayerClass p) {
 		String idVideo = in.next();
 		try{
-			System.out.println(p.listTags(idVideo)+"\n");
+			System.out.println(p.listTags(idVideo));
 		}
 		catch(NoSuchVideoException e){
 			System.out.println(VIDEO_DOES_NOT_EXIST);

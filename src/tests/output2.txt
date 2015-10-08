@@ -8,11 +8,9 @@ Tag adicionada a video com sucesso.
 
 smellycat
 
-
 Video ja tem tag.
 
 smellycat
-
 
 Tag inexistente.
 
@@ -36,7 +34,6 @@ Tag inexistente.
 
 smellycat
 
-
 vid1 dejavu.avi 1000 inativo
 
 vid1 dejavu.avi 1000 inativo
@@ -56,3 +53,4 @@ Video removido de favoritos com sucesso.
 Utilizador nao tem favoritos.
 
 Gravando e terminando...
+
