@@ -1,6 +1,9 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package dataStructures;
-
-
 
 public class DoublyLinkedList<E> implements List<E>
 {   
@@ -313,7 +316,7 @@ public class DoublyLinkedList<E> implements List<E>
     }
 
 
-	@Override
+	// Remove all of the elements from list
 	public void clear() {
         head = null;
         tail = null;

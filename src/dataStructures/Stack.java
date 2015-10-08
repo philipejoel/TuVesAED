@@ -1,3 +1,8 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package dataStructures;
 
 import java.io.Serializable;
@@ -20,9 +25,10 @@ public interface Stack<E> extends Serializable
     // Removes and returns the element at the top of the stack.
     E pop( ) throws EmptyStackException;
     
+    // Remove all elements from the stack.
+   	void clear();
+   	
     Iterator<E> iterator();
-
-	void clear();
 
 }
 

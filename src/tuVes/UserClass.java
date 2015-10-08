@@ -1,3 +1,8 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package tuVes;
 
 import java.io.Serializable;
@@ -9,7 +14,14 @@ import exceptions.EmptyHistoryException;
 
 public class UserClass implements User, Serializable{
 	
-
+/***
+* @nick - User nick
+* @name - User name
+* @email - User email
+* @video - Video added by user
+* @favouriteVideo - User favourite video
+* @viewedHistroy - History of viewed videos by user
+***/
 	private static final long serialVersionUID = 1L;
 	private String nick;
 	private String name;
@@ -26,26 +38,25 @@ public class UserClass implements User, Serializable{
 		this.favouriteVideo = null;
 	}
 	
-	@Override
 	public void addVideo(Video video) {
 		this.video = video;
 	}
-	@Override
+	
 	public void addVideoToFavourite(Video video) {
 		this.favouriteVideo = video;
 	}
-	@Override
+	
 	public void addVideoToHistory(Video video) {
 		viewedHistroy.push(video);
 	}
-	@Override
+	
 	public boolean isFavourite(String idVideo){
 		if (favouriteVideo == null)
 			return false;
 		else
 			return favouriteVideo.getIdVideo().equals(idVideo);
 	}
-	@Override
+	
 	public Iterator<Video> viewedVideosIterator() 
 			throws EmptyHistoryException {
 		if(viewedHistroy.isEmpty())
@@ -54,27 +65,27 @@ public class UserClass implements User, Serializable{
 			return viewedHistroy.iterator();
 			//return (Iterator<Video>) viewedHistroy.iterator();	
 	}
-	@Override
+	
 	public String favouriteVideos() {
 		return this.favouriteVideo.getVideoInfo();
 	}
-	@Override
+	
 	public void removeViewedHistory() {
 		this.viewedHistroy.clear();
 	}
-	@Override
+	
 	public boolean hasHistory(){
 		return !viewedHistroy.isEmpty();
 	}
-	@Override
+	
 	public boolean hasFavourite(){
 		return (favouriteVideo != null);
 	}
-	@Override
+	
 	public void removeVideoFromFavourite(String idVideo) {
 		favouriteVideo = null;
 	}
-	@Override
+	
 	public String getNick() {
 		return this.nick;
 	}

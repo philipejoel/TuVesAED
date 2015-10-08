@@ -1,3 +1,8 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package tuVes;
 
 import java.io.Serializable;
@@ -6,6 +11,15 @@ public class VideoClass implements Video, Serializable{
 
 
 	private static final long serialVersionUID = 1L;
+
+/***
+* @idVideo - id of video
+* @title - title of video
+* @tag - tag assigned to video by user
+* @url - link to video
+* @isDisabled - boolean value which determinate if video is disabled
+* @length - duration of video
+***/
 	private String idVideo;
 	private String title;
 	private String tag;
@@ -22,47 +36,42 @@ public class VideoClass implements Video, Serializable{
 		this.length = length;
 	}
 	
-	@Override
 	public String getIdVideo(){
 		return idVideo;
 	}
-	@Override
+	
 	public String getTitle(){
 		return title;
 	}
-	@Override
+	
 	public long getLength(){
 		return length;
 	}
-	@Override
+	
 	public String getStatus(){
 		return isDisabled? "inativo" : "ativo";
 	}
-	@Override
+	
 	public void disableVideo() {
 		isDisabled = true;
 	}
-	@Override
+	
 	public boolean isVideoDisabled() {
 		return isDisabled;
 	}
-	@Override
+	
 	public void addTagToVideo(String tag) {
 		this.tag = tag;
 	}
-	@Override
+	
 	public boolean hasTags(){
 		return (tag != null);
 	}	
-	@Override
-	public String getTags(){
+	
+	public String getTag(){
 		return tag;
 	}
-	@Override
-	public String listTags() {
-		return tag;
-	}	
-	@Override
+	
 	public String getVideoInfo(){
 		return (getIdVideo() + " " + getTitle() +  " " +
 				getLength() +  " " + getStatus());

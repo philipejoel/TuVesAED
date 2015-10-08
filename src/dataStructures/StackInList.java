@@ -1,3 +1,8 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package dataStructures;
 
 public class StackInList<E> implements Stack<E>
@@ -56,9 +61,8 @@ public class StackInList<E> implements Stack<E>
         return list.removeFirst();
     }
 
-
+    // Remove all elements from the stack.
 	public void clear() {
-		// TODO Auto-generated method stub
 		list.clear();
 	}
 	

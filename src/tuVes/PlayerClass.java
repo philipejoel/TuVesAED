@@ -1,3 +1,8 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package tuVes;
 
 import java.io.FileInputStream;
@@ -23,7 +28,11 @@ import exceptions.NoTagsInVideoException;
 
 public class PlayerClass implements Player, Serializable{
 
-
+/***
+* @user - user added to the system
+* @video - video added to the system
+* @tag - tag assigned to video by user
+***/
 	private static final long serialVersionUID = 1L;
 	private User user;
 	private Video video;
@@ -35,14 +44,11 @@ public class PlayerClass implements Player, Serializable{
 		tag = "";
 	}
 	
-	
 	public void insertUser(String nick, String email, String name){
-		/*if (usersByNick.containsKey(nick))
-			throw new UserAlreadyExistsException();*/    //not needed yet
 		User u = new UserClass(nick, email, name);
 		user = u;
-		
 	}
+	
 	public void insertVideo(String idVideo, String nick, String url, long length,String title)
 			throws NoSuchUserException, InvalidLengthException {
 		if (user == null || !user.getNick().equals(nick))//SOLVE
@@ -55,6 +61,7 @@ public class PlayerClass implements Player, Serializable{
 			user.addVideo(v);
 		}
 	}
+	
 	public void disableVideo(String idVideo) 
 			throws NoSuchVideoException, DisabledVideoException{
 		if (video == null || !video.getIdVideo().equals(idVideo))//SOLVE
@@ -64,6 +71,7 @@ public class PlayerClass implements Player, Serializable{
 		else
 			video.disableVideo();
 	}
+	
 	public void playVideo(String idVideo, String nick) 
 			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException {
 		if (video == null || !video.getIdVideo().equals(idVideo))//SOLVE
@@ -75,6 +83,7 @@ public class PlayerClass implements Player, Serializable{
 		else
 			user.addVideoToHistory(video);
 	}
+	
 	public Iterator<Video> listHistory(String nick)
 			throws NoSuchUserException, EmptyHistoryException {
 		if (user == null || !user.getNick().equals(nick))//SOLVE
@@ -84,6 +93,7 @@ public class PlayerClass implements Player, Serializable{
 		else
 			return user.viewedVideosIterator();
 	}
+	
 	public void removeHistory(String nick)
 			throws NoSuchUserException{
 		if (user == null || !user.getNick().equals(nick))//SOLVE
@@ -91,6 +101,7 @@ public class PlayerClass implements Player, Serializable{
 		else
 			user.removeViewedHistory();
 	}
+	
 	public void addVideoToFavourites(String idVideo, String nick) 
 			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException, AlreadyFavouriteException{
 		if (video == null || !video.getIdVideo().equals(idVideo))
@@ -104,6 +115,7 @@ public class PlayerClass implements Player, Serializable{
 		else
 			user.addVideoToFavourite(video);
 	}
+	
 	public void removeVideoFromFavourites(String idVideo, String nick) 
 			throws NoSuchVideoException, NoSuchUserException, NoFavouriteVideoException {
 		if (video == null || !video.getIdVideo().equals(idVideo))
@@ -115,6 +127,7 @@ public class PlayerClass implements Player, Serializable{
 		else
 			user.removeVideoFromFavourite(idVideo);
 	}
+	
 	public String listFavourites(String nick) 
 			throws NoSuchUserException, NoFavouritesException{
 		if (user == null || !user.getNick().equals(nick))
@@ -124,6 +137,7 @@ public class PlayerClass implements Player, Serializable{
 		else
 			return user.favouriteVideos();
 	}
+	
 	public void addTagToVideo(String idVideo, String tag) 
 			throws NoSuchVideoException, DisabledVideoException, AlreadyHasTagException {
 		if(video == null || !video.getIdVideo().equals(idVideo))
@@ -137,6 +151,7 @@ public class PlayerClass implements Player, Serializable{
 			video.addTagToVideo(tag);	
 		}
 	}
+	
 	public String listTags(String idVideo) 
 			throws NoSuchVideoException, NoTagsInVideoException{
 		if (video == null || !video.getIdVideo().equals(idVideo))
@@ -144,15 +159,16 @@ public class PlayerClass implements Player, Serializable{
 		else if (!video.hasTags())
 			throw new NoTagsInVideoException();
 		else
-			return video.getTags();
+			return video.getTag();
 			
 	}
+	
 	public String searchTag(String tag) 
 		throws NoSuchTagException{
 		if (!this.tag.equals(tag))
 			throw new NoSuchTagException();
 		else
-			if(video.getTags().equals(tag)){
+			if(video.getTag().equals(tag)){
 				return video.getVideoInfo();
 			}
 		return null;

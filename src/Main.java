@@ -1,3 +1,8 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 import java.io.IOException;
 import java.util.Scanner;
 import dataStructures.Iterator;
@@ -16,9 +21,10 @@ import exceptions.NoTagsInVideoException;
 import tuVes.PlayerClass;
 import tuVes.Video;;
 
-//INCLUDE ALL SUCCESS MESSAGES, LISTS, ETC
+
 public class Main {
 	
+	// Constants for commands.
 	private static final String INSERT_USER = "IU";
 	private static final String INSERT_VIDEO = "IV";
 	private static final String DISABLE_VIDEO = "DV"; 
@@ -33,7 +39,7 @@ public class Main {
 	private static final String SEARCH_TAG = "PV";
 	private static final String EXIT = "XS";
 
-	//Constants for messages
+	//Constants for messages.
 	private static final String USER_INSERT_SUCCESS = "Insercao de utilizador com sucesso.";
 	private static final String USER_EXISTS = "Utilizador existente.";
 	private static final String VIDEO_INSERT_SUCCESS = "Video adicionado com sucesso.";
@@ -58,7 +64,8 @@ public class Main {
 	private static final String TAG_DOES_NOT_EXIST = "Tag inexistente.";
 	private static final String EXIT_MESSAGE = "Gravando e terminando...";
 	private static final String DATA_FILE = "TuVes.dat";
-		
+	
+//	Main function responsible for the initialization of the whole program.
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
 		PlayerClass p = new PlayerClass();
@@ -70,7 +77,8 @@ public class Main {
 		in.close();
 	}
 
-	
+// Command interpreter responsible for interpretation of inputs and sending specific
+// variables to suitable methods which communicate with player class.
 	private static void commandInterpreter(Scanner in, PlayerClass p) {
 		String command = null;
 		do {			
