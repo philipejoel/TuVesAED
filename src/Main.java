@@ -1,7 +1,9 @@
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
-import dataStructures.Iterator;
+import exceptions.AlreadyFavouriteException;
+import exceptions.AlreadyHasTagException;
 import exceptions.DisabledVideoException;
 import exceptions.EmptyHistoryException;
 import exceptions.InvalidLengthException;
@@ -38,7 +40,7 @@ public class Main {
 	private static final String VIDEO_EXISTS = "Video existente.";
 	private static final String NICK_EXISTS = "Nick existente.";
 	private static final String INVALID_LENGTH = "Duracao invalida.";
-	private static final String VIDEO_DISABLE_SUCCESS = "Video desativado com sucesso..";
+	private static final String VIDEO_DISABLE_SUCCESS = "Video desativado com sucesso.";
 	private static final String VIDEO_DOES_NOT_EXIST = "Video inexistente.";
 	private static final String DISABLED_VIDEO = "Video inativo.";
 	private static final String VIDEO_WATCHED_SUCCESS = "Video visualizado com sucesso.";
@@ -54,16 +56,20 @@ public class Main {
 	private static final String VIDEO_ALREADY_HAS_TAG = "Video ja tem tag.";
 	private static final String VIDEO_HAS_NO_TAGS = "Video nao tem tags.";
 	private static final String TAG_DOES_NOT_EXIST = "Tag inexistente.";
-	private static final String EXIT_MESSAGE = "Gravando e terminando.";
-
+	private static final String EXIT_MESSAGE = "Gravando e terminando...";
+	private static final String DATA_FILE = "TuVes.dat";
 		
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
 		PlayerClass p = new PlayerClass();
+		try {
+			p.load(DATA_FILE);
+		} catch (ClassNotFoundException | IOException e) {
+		}
 		commandInterpreter(in, p);
 		in.close();
 	}
-	
+
 	
 	private static void commandInterpreter(Scanner in, PlayerClass p) {
 		String command = null;
@@ -82,7 +88,7 @@ public class Main {
 				case ADD_TAG_TO_VIDEO: processAddTagToVideo(in, p); break;
 				case VIDEO_TAG_LIST: processVideoTagList(in, p); break;
 				case SEARCH_TAG: processSearchTag(in, p); break;
-				case EXIT: System.out.println(EXIT_MESSAGE);  break;
+				case EXIT: processExit(p); break;
 				default: break;
 			}
 			System.out.println();	
@@ -91,19 +97,21 @@ public class Main {
 	}
 	
 	private static void	 processInsertUser(Scanner in, PlayerClass p) {
-		StringTokenizer nick = new StringTokenizer(in.next());
-		StringTokenizer email = new StringTokenizer(in.next());
-		String name = in.next();
+		String nick = in.next();
+		String email = in.next();
+		String name = in.nextLine();
 		p.insertUser(nick, email, name);
+		System.out.println(USER_INSERT_SUCCESS);
 	}
 	private static void	 processInsertVideo(Scanner in, PlayerClass p) {
-		StringTokenizer idVideo = new StringTokenizer(in.next());
-		StringTokenizer nick = new StringTokenizer(in.next());
-		StringTokenizer url = new StringTokenizer(in.next());
+		String idVideo = in.next();
+		String nick = in.next();
+		String url = in.next();
 		long length = in.nextInt();
-		String title = in.next();
+		String title = in.nextLine().replaceAll("^ *", "");
 		try {
 			p.insertVideo(idVideo, nick, url, length, title);
+			System.out.println(VIDEO_INSERT_SUCCESS);
 		} catch (NoSuchUserException e) {
 			System.out.println(NICK_DOES_NOT_EXIST);
 		} catch (InvalidLengthException e) {
@@ -111,9 +119,10 @@ public class Main {
 		}
 	}
 	private static void	 processDisableVideo(Scanner in, PlayerClass p) {
-		StringTokenizer idVideo = new StringTokenizer(in.next());
+		String idVideo = in.next();
 		try {
 			p.disableVideo(idVideo);
+			System.out.println(VIDEO_DISABLE_SUCCESS);
 		} catch (NoSuchVideoException e) {
 			System.out.println(VIDEO_DOES_NOT_EXIST);
 		} catch (DisabledVideoException e) {
@@ -121,10 +130,11 @@ public class Main {
 		}
 	}
 	private static void	 processPlayVideo(Scanner in, PlayerClass p) {
-		StringTokenizer idVideo = new StringTokenizer(in.next());
-		StringTokenizer nick = new StringTokenizer(in.next());
+		String idVideo = in.next();
+		String nick = in.next();
 		try {
 			p.playVideo(idVideo, nick);
+			System.out.println(VIDEO_WATCHED_SUCCESS);
 		} catch (NoSuchVideoException e) {
 			System.out.println(VIDEO_DOES_NOT_EXIST);
 		} catch (NoSuchUserException e) {
@@ -134,9 +144,13 @@ public class Main {
 		}
 	}
 	private static void	 processHistoryList(Scanner in, PlayerClass p) {
-		StringTokenizer nick = new StringTokenizer(in.next());
+		String nick = in.next();
 		try{
+			@SuppressWarnings("unchecked")
 			Iterator<Video> historyIterator = (Iterator<Video>) p.listHistory(nick);
+			while (historyIterator.hasNext()){
+				System.out.println(historyIterator.next().getVideoInfo());
+			}
 		}
 		catch (NoSuchUserException e){
 			System.out.println(NICK_DOES_NOT_EXIST);
@@ -146,19 +160,21 @@ public class Main {
 		}
 	}
 	private static void	 processRemoveHistory(Scanner in, PlayerClass p) {
-		StringTokenizer nick = new StringTokenizer(in.next());
+		String nick = in.next();
 		try{
 			p.removeHistory(nick);
+			System.out.println(EMPTY_HISTORY_SUCCESS);
 		}
 		catch(NoSuchUserException e){
 			System.out.println(NICK_DOES_NOT_EXIST);
 		}
 	}
 	private static void	 processAddVideoToFavourites(Scanner in, PlayerClass p) {
-		StringTokenizer idVideo = new StringTokenizer(in.next());
-		StringTokenizer nick = new StringTokenizer(in.next());
+		String idVideo = in.next();
+		String nick = in.next();
 		try{
 			p.addVideoToFavourites(idVideo, nick);
+			System.out.println(ADD_VIDEO_TO_FAVOURITES_SUCCESS);
 		}
 		catch(NoSuchVideoException e){
 			System.out.println(VIDEO_DOES_NOT_EXIST);
@@ -169,12 +185,16 @@ public class Main {
 		catch(DisabledVideoException e){
 			System.out.println(DISABLED_VIDEO);
 		}
+		catch(AlreadyFavouriteException e){
+			System.out.println(VIDEO_ALREADY_USER_FAVOURITE);
+		}
 	}
 	private static void	 processRemoveVideoFromFavourites(Scanner in, PlayerClass p) {
-		StringTokenizer idVideo = new StringTokenizer(in.next());
-		StringTokenizer nick = new StringTokenizer(in.next());
+		String idVideo = in.next();
+		String nick = in.next();
 		try{
 			p.removeVideoFromFavourites(idVideo, nick);
+			System.out.println(VIDEO_REMOVE_FROM_FAVOURITE_SUCCESS);
 		}
 		catch(NoSuchVideoException e){
 			System.out.println(VIDEO_DOES_NOT_EXIST);
@@ -187,9 +207,9 @@ public class Main {
 		}
 	}
 	private static void	 processFavouriteList(Scanner in, PlayerClass p) {
-		StringTokenizer nick = new StringTokenizer(in.next());
+		String nick = in.next();
 		try{
-			p.listFavourites(nick);
+			System.out.println(p.listFavourites(nick));			
 		}
 		catch(NoSuchUserException e){
 			System.out.println(NICK_DOES_NOT_EXIST);
@@ -199,22 +219,26 @@ public class Main {
 		}
 	}
 	private static void	 processAddTagToVideo(Scanner in, PlayerClass p) {
-		StringTokenizer idVideo = new StringTokenizer(in.next());
-		StringTokenizer tag = new StringTokenizer(in.next());
+		String idVideo = in.next();
+		String tag = in.next();
 		try{
 			p.addTagToVideo(idVideo, tag);
+			System.out.println(TAG_ADD_TO_VIDEO_SUCCESS);
 		}
 		catch(NoSuchVideoException e ){
 			System.out.println(VIDEO_DOES_NOT_EXIST);
+		}
+		catch(AlreadyHasTagException e ){
+			System.out.println(VIDEO_ALREADY_HAS_TAG);
 		}
 		catch(DisabledVideoException e){
 			System.out.println(DISABLED_VIDEO);
 		}
 	}
 	private static void	 processVideoTagList(Scanner in, PlayerClass p) {
-		StringTokenizer idVideo = new StringTokenizer(in.next());
+		String idVideo = in.next();
 		try{
-			p.listTags(idVideo);
+			System.out.println(p.listTags(idVideo)+"\n");
 		}
 		catch(NoSuchVideoException e){
 			System.out.println(VIDEO_DOES_NOT_EXIST);
@@ -224,12 +248,20 @@ public class Main {
 		}
 	}
 	private static void	 processSearchTag(Scanner in, PlayerClass p) {
-		StringTokenizer tag = new StringTokenizer(in.next());
+		String tag = in.next();
 		try{
-			p.searchTag(tag);
+			System.out.println(p.searchTag(tag));
 		}
 		catch(NoSuchTagException e){
 			System.out.println(TAG_DOES_NOT_EXIST);
+		}
+	}
+	private static void processExit(PlayerClass p){
+		try {
+			p.save(DATA_FILE);
+			System.out.println(EXIT_MESSAGE);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -6,11 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
+import java.io.Serializable;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.StringTokenizer;
 
+import exceptions.AlreadyFavouriteException;
+import exceptions.AlreadyHasTagException;
 import exceptions.DisabledVideoException;
 import exceptions.EmptyHistoryException;
 import exceptions.InvalidLengthException;
@@ -21,155 +21,156 @@ import exceptions.NoSuchUserException;
 import exceptions.NoSuchVideoException;
 import exceptions.NoTagsInVideoException;
 
-public class PlayerClass implements Player {
+public class PlayerClass implements Player, Serializable{
 
-	private Map<StringTokenizer, User> usersByNick;
-	private Map<StringTokenizer, Video> videosById;
-	private StringTokenizer tag;
-	
-	//update save and load after tag's problem solved
-	
+
+	private static final long serialVersionUID = 1L;
+	private User user;
+	private Video video;
+	private String tag;
 	
 	public PlayerClass(){
-		usersByNick = new HashMap<StringTokenizer/*nick*/, User>();
-		videosById = new HashMap<StringTokenizer/*idVideo*/, Video>();
-		tag = null;
+		user = null;
+		video = null;
+		tag = "";
 	}
 	
 	
-	public void insertUser(StringTokenizer nick, StringTokenizer email, String name){
+	public void insertUser(String nick, String email, String name){
 		/*if (usersByNick.containsKey(nick))
 			throw new UserAlreadyExistsException();*/    //not needed yet
 		User u = new UserClass(nick, email, name);
-		usersByNick.put(nick, u);
+		user = u;
+		
 	}
-	public void insertVideo(StringTokenizer idVideo, StringTokenizer nick, StringTokenizer url, long length,String title)
+	public void insertVideo(String idVideo, String nick, String url, long length,String title)
 			throws NoSuchUserException, InvalidLengthException {
-		if (!usersByNick.containsKey(nick))
+		if (user == null || !user.getNick().equals(nick))//SOLVE
 			throw new NoSuchUserException();
 		else if ((length%1 != 0) || (length<=0))
 			throw new InvalidLengthException();
 		else{
 			Video v = new VideoClass(idVideo, title, url, length);
-			videosById.put(idVideo, v);
-			usersByNick.get(nick).addVideo(v);
+			video = v;
+			user.addVideo(v);
 		}
 	}
-	public void disableVideo(StringTokenizer idVideo) 
+	public void disableVideo(String idVideo) 
 			throws NoSuchVideoException, DisabledVideoException{
-		if (!videosById.containsKey(idVideo))
+		if (video == null || !video.getIdVideo().equals(idVideo))//SOLVE
 			throw new NoSuchVideoException();
-		else if (videosById.get(idVideo).isVideoDisabled())
+		else if (video.isVideoDisabled())
 			throw new DisabledVideoException();
 		else
-			videosById.get(idVideo).disableVideo();
+			video.disableVideo();
 	}
-	public void playVideo(StringTokenizer idVideo, StringTokenizer nick) 
+	public void playVideo(String idVideo, String nick) 
 			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException {
-		if (!videosById.containsKey(idVideo))
+		if (video == null || !video.getIdVideo().equals(idVideo))//SOLVE
 			throw new NoSuchVideoException();
-		else if (!usersByNick.containsKey(nick))
+		else if (user == null || !user.getNick().equals(nick))//SOLVE
 			throw new NoSuchUserException();
-		else if (videosById.get(idVideo).isVideoDisabled())
+		else if (video.isVideoDisabled())
 			throw new DisabledVideoException();
 		else
-			usersByNick.get(nick).addVideoToHistory(videosById.get(idVideo));
+			user.addVideoToHistory(video);
 	}
-	public Iterator<Video> listHistory(StringTokenizer nick)
+	public Iterator<Video> listHistory(String nick)
 			throws NoSuchUserException, EmptyHistoryException {
-		if (!usersByNick.containsKey(nick))
+		if (user == null || !user.getNick().equals(nick))//SOLVE
 			throw new NoSuchUserException();
-		else if (!usersByNick.get(nick).hasHistory())
+		else if (!user.hasHistory())
 			throw new EmptyHistoryException();
 		else
-			return usersByNick.get(nick).viewedVideosIterator();
+			return user.viewedVideosIterator();
 	}
-	@Override
-	public void removeHistory(StringTokenizer nick)
+	public void removeHistory(String nick)
 			throws NoSuchUserException{
-		if (!usersByNick.containsKey(nick))
+		if (user == null || !user.getNick().equals(nick))//SOLVE
 			throw new NoSuchUserException();
 		else
-			usersByNick.get(nick).removeViewedHistory();
+			user.removeViewedHistory();
 	}
-	@Override
-	public void addVideoToFavourites(StringTokenizer idVideo, StringTokenizer nick) 
-			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException{
-		if (!videosById.containsKey(idVideo))
+	public void addVideoToFavourites(String idVideo, String nick) 
+			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException, AlreadyFavouriteException{
+		if (video == null || !video.getIdVideo().equals(idVideo))
 			throw new NoSuchVideoException();
-		else if (!usersByNick.containsKey(nick))
+		else if (user == null || !user.getNick().equals(nick))
 			throw new NoSuchUserException();
-		else if (videosById.get(idVideo).isVideoDisabled())
+		else if (video.isVideoDisabled())
 			throw new DisabledVideoException();
+		else if (user.isFavourite(idVideo))
+			throw new AlreadyFavouriteException();
 		else
-			usersByNick.get(nick).addVideoToFavourite(videosById.get(idVideo));
+			user.addVideoToFavourite(video);
 	}
-	@Override
-	public void removeVideoFromFavourites(StringTokenizer idVideo, StringTokenizer nick) 
+	public void removeVideoFromFavourites(String idVideo, String nick) 
 			throws NoSuchVideoException, NoSuchUserException, NoFavouriteVideoException {
-		if (!videosById.containsKey(idVideo))
+		if (video == null || !video.getIdVideo().equals(idVideo))
 			throw new NoSuchVideoException();
-		else if (!usersByNick.containsKey(nick))
+		else if (user == null || !user.getNick().equals(nick))
 			throw new NoSuchUserException();
-		else if (!usersByNick.get(nick).isFavourite(idVideo))
+		else if (!user.isFavourite(idVideo))
 			throw new NoFavouriteVideoException();
 		else
-			usersByNick.get(nick).removeVideoFromFavourite(idVideo);
+			user.removeVideoFromFavourite(idVideo);
 	}
-	@Override
-	public String listFavourites(StringTokenizer nick) 
+	public String listFavourites(String nick) 
 			throws NoSuchUserException, NoFavouritesException{
-		if (!usersByNick.containsKey(nick))
+		if (user == null || !user.getNick().equals(nick))
 			throw new NoSuchUserException();
-		else if (!usersByNick.get(nick).hasFavourite())
+		else if (!user.hasFavourite())
 			throw new NoFavouritesException();
 		else
-			return usersByNick.get(nick).favouriteVideos();
+			return user.favouriteVideos();
 	}
-	public void addTagToVideo(StringTokenizer idVideo, StringTokenizer tag) 
-			throws NoSuchVideoException, DisabledVideoException {
-		if(!videosById.containsKey(idVideo))
+	public void addTagToVideo(String idVideo, String tag) 
+			throws NoSuchVideoException, DisabledVideoException, AlreadyHasTagException {
+		if(video == null || !video.getIdVideo().equals(idVideo))
 			throw new NoSuchVideoException();
-		else if(videosById.get(idVideo).isVideoDisabled())
+		else if(video.isVideoDisabled())
 			throw new DisabledVideoException();
+		else if(video.hasTags())
+			throw new AlreadyHasTagException();
 		else{
 			this.tag = tag;
-			videosById.get(idVideo).addTagToVideo(tag);	
+			video.addTagToVideo(tag);	
 		}
 	}
-	public StringTokenizer listTags(StringTokenizer idVideo) 
+	public String listTags(String idVideo) 
 			throws NoSuchVideoException, NoTagsInVideoException{
-		if (!videosById.containsKey(idVideo))
+		if (video == null || !video.getIdVideo().equals(idVideo))
 			throw new NoSuchVideoException();
-		else if (!videosById.get(idVideo).hasTags())
+		else if (!video.hasTags())
 			throw new NoTagsInVideoException();
 		else
-			return videosById.get(idVideo).getTags();
+			return video.getTags();
 			
 	}
-	public String searchTag(StringTokenizer tag) 
+	public String searchTag(String tag) 
 		throws NoSuchTagException{
 		if (!this.tag.equals(tag))
 			throw new NoSuchTagException();
 		else
-			for (Video video : videosById.values()){
-				if(video.getTags().equals(tag)){
-					return video.getVideoInfo();
-				}
+			if(video.getTags().equals(tag)){
+				return video.getVideoInfo();
 			}
 		return null;
 	}
-	@SuppressWarnings("unchecked")
+	
 	public void load(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException{
 		ObjectInputStream file = new ObjectInputStream(new FileInputStream(fileName));
-		usersByNick = (Map<StringTokenizer, User>) file.readObject();
-		videosById = (Map<StringTokenizer, Video>) file.readObject();
+		user = (User) file.readObject();
+		video = (Video) file.readObject();
+		tag = (String) file.readObject();
 		file.close();
 	}
+	
 	public void save(String fileName)  throws IOException{
 		ObjectOutputStream file = new ObjectOutputStream(new FileOutputStream(fileName));
-		file.writeObject(usersByNick);
-		file.writeObject(videosById);
+		file.writeObject(user);
+		file.writeObject(video);
+		file.writeObject(tag);
 		file.flush();
 		file.close();
 	}
