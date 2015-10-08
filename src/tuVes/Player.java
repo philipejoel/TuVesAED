@@ -2,7 +2,7 @@ package tuVes;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Iterator;
+import dataStructures.Iterator;
 
 import exceptions.AlreadyFavouriteException;
 import exceptions.AlreadyHasTagException;

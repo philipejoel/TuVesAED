@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Iterator;
+import dataStructures.Iterator;
 
 import exceptions.AlreadyFavouriteException;
 import exceptions.AlreadyHasTagException;

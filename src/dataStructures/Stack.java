@@ -2,8 +2,6 @@ package dataStructures;
 
 import java.io.Serializable;
 
-import exceptions.EmptyStackException;
-
 public interface Stack<E> extends Serializable
 {
 
@@ -21,6 +19,8 @@ public interface Stack<E> extends Serializable
 
     // Removes and returns the element at the top of the stack.
     E pop( ) throws EmptyStackException;
+    
+    Iterator<E> iterator();
 
 	void clear();
 

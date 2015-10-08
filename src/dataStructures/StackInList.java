@@ -1,7 +1,5 @@
 package dataStructures;
 
-import exceptions.EmptyStackException;
-
 public class StackInList<E> implements Stack<E>
 {
 
@@ -57,10 +55,16 @@ public class StackInList<E> implements Stack<E>
 
         return list.removeFirst();
     }
-    
-    public void clear(){
-    	list.clear();
-    }
 
+
+	public void clear() {
+		// TODO Auto-generated method stub
+		list.clear();
+	}
+	
+	// Returns an iterator of the elements in the stack (in proper sequence).
+	public Iterator<E> iterator(){
+		return list.iterator();
+	}
 
 }

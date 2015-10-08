@@ -2,8 +2,6 @@ package dataStructures;
 
 import java.io.Serializable;
 
-import exceptions.NoSuchElementException;
-
 public interface Iterator<E> extends Serializable
 {
 

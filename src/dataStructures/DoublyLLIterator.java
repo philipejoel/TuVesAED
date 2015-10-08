@@ -1,7 +1,5 @@
 package dataStructures;
 
-import exceptions.NoSuchElementException;
-
 class DoublyLLIterator<E> implements TwoWayIterator<E>
 {
 

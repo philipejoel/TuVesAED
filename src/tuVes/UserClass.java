@@ -1,9 +1,9 @@
 package tuVes;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Stack; //Change to dataStructures.Stack later
-
+import dataStructures.Iterator;
+import dataStructures.Stack;
+import dataStructures.StackInList;
 import exceptions.EmptyHistoryException;
 
 
@@ -22,7 +22,7 @@ public class UserClass implements User, Serializable{
 		this.nick = nick;
 		this.email = email;
 		this.name = name;
-		this.viewedHistroy = new Stack<>();
+		this.viewedHistroy = new StackInList<>();
 		this.favouriteVideo = null;
 	}
 	
@@ -51,7 +51,8 @@ public class UserClass implements User, Serializable{
 		if(viewedHistroy.isEmpty())
 			throw new EmptyHistoryException();
 		else
-			return viewedHistroy.iterator();	
+			return viewedHistroy.iterator();
+			//return (Iterator<Video>) viewedHistroy.iterator();	
 	}
 	@Override
 	public String favouriteVideos() {

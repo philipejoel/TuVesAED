@@ -1,6 +1,7 @@
 package tuVes;
 
-import java.util.Iterator;
+
+import dataStructures.Iterator;
 import exceptions.EmptyHistoryException;
 
 public interface User {

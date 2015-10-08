@@ -1,6 +1,6 @@
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Scanner;
+import dataStructures.Iterator;
 
 import exceptions.AlreadyFavouriteException;
 import exceptions.AlreadyHasTagException;
@@ -146,7 +146,6 @@ public class Main {
 	private static void	 processHistoryList(Scanner in, PlayerClass p) {
 		String nick = in.next();
 		try{
-			@SuppressWarnings("unchecked")
 			Iterator<Video> historyIterator = (Iterator<Video>) p.listHistory(nick);
 			while (historyIterator.hasNext()){
 				System.out.println(historyIterator.next().getVideoInfo());

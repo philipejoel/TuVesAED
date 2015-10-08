@@ -1,7 +1,5 @@
 package dataStructures;
 
-import exceptions.NoSuchElementException;
-
 public interface TwoWayIterator<E> extends Iterator<E>
 {
 
