@@ -5,7 +5,7 @@
 
 package dataStructures;
 
-public class StackInList<E> implements Stack<E>
+public class StackInList<E> implements IterableStack<E>
 {
 
     static final long serialVersionUID = 0L;

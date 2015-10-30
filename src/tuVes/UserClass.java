@@ -6,13 +6,14 @@
 package tuVes;
 
 import java.io.Serializable;
+
+import dataStructures.IterableStack;
 import dataStructures.Iterator;
-import dataStructures.Stack;
 import dataStructures.StackInList;
 import exceptions.EmptyHistoryException;
 
 
-public class UserClass implements User, Serializable{
+public class UserClass implements UserSetter, Serializable{
 	
 /***
 * @nick - User nick
@@ -28,7 +29,7 @@ public class UserClass implements User, Serializable{
 	private String email;
 	private Video video;
 	private Video favouriteVideo;
-	private Stack<Video> viewedHistroy;
+	private IterableStack<Video> viewedHistroy;
 	
 	public UserClass(String nick, String email, String name){
 		this.nick = nick;

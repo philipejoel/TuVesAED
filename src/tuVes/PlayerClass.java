@@ -34,8 +34,8 @@ public class PlayerClass implements Player, Serializable{
 * @tag - tag assigned to video by user
 ***/
 	private static final long serialVersionUID = 1L;
-	private User user;
-	private Video video;
+	private UserSetter user;
+	private VideoSetter video;
 	private String tag;
 	
 	public PlayerClass(){
@@ -46,7 +46,7 @@ public class PlayerClass implements Player, Serializable{
 	
 	public void insertUser(String nick, String email, String name){
 		User u = new UserClass(nick, email, name);
-		user = u;
+		user = (UserSetter) u;
 	}
 	
 	public void insertVideo(String idVideo, String nick, String url, long length,String title)
@@ -56,7 +56,7 @@ public class PlayerClass implements Player, Serializable{
 		else if ((length%1 != 0) || (length<=0))
 			throw new InvalidLengthException();
 		else{
-			Video v = new VideoClass(idVideo, title, url, length);
+			VideoSetter v = new VideoClass(idVideo, title, url, length);
 			video = v;
 			user.addVideo(v);
 		}
@@ -176,8 +176,8 @@ public class PlayerClass implements Player, Serializable{
 	
 	public void load(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException{
 		ObjectInputStream file = new ObjectInputStream(new FileInputStream(fileName));
-		user = (User) file.readObject();
-		video = (Video) file.readObject();
+		user = (UserSetter) file.readObject();
+		video = (VideoSetter) file.readObject();
 		tag = (String) file.readObject();
 		file.close();
 	}

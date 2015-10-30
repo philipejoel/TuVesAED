@@ -25,10 +25,7 @@ public interface Stack<E> extends Serializable
     // Removes and returns the element at the top of the stack.
     E pop( ) throws EmptyStackException;
     
-    // Remove all elements from the stack.
-   	void clear();
-   	
-    Iterator<E> iterator();
+
 
 }
 

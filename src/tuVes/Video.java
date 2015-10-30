@@ -26,15 +26,11 @@ public interface Video {
 	//Returns video information in form: "IdVideo Title Length Status"
 	public String getVideoInfo();
 	
-	//Disable a video
-	public void disableVideo();
 	
 	//Returns boolean value true if video is disabled
 	//and false if video is enabled
 	public boolean isVideoDisabled();
 	
-	//Assign tag to video
-	public void addTagToVideo(String tag);
 	
 	//Returns boolean value true if video is has any Tag
 	//and false if video has not.

@@ -7,7 +7,7 @@ package tuVes;
 
 import java.io.Serializable;
 
-public class VideoClass implements Video, Serializable{
+public class VideoClass implements VideoSetter, Serializable{
 
 
 	private static final long serialVersionUID = 1L;
