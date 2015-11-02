@@ -7,4 +7,5 @@ public interface VideoSetter extends Video{
 	
 	//Assign tag to video
 	public void addTagToVideo(String tag);
+
 }

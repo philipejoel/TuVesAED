@@ -3,8 +3,14 @@
  * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
  */
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
+
 import dataStructures.Iterator;
 
 import exceptions.AlreadyFavouriteException;
@@ -18,6 +24,9 @@ import exceptions.NoSuchTagException;
 import exceptions.NoSuchUserException;
 import exceptions.NoSuchVideoException;
 import exceptions.NoTagsInVideoException;
+import exceptions.UserAlreadyExistException;
+import exceptions.UserHasNoVideosException;
+import exceptions.VideoAlreadyExistException;
 import tuVes.PlayerClass;
 import tuVes.Video;;
 
@@ -28,7 +37,8 @@ public class Main {
 	private static final String INSERT_USER = "IU";
 	private static final String INSERT_VIDEO = "IV";
 	private static final String DISABLE_VIDEO = "DV"; 
-	private static final String PLAY_VIDEO = "VV";  
+	private static final String PLAY_VIDEO = "VV";
+	private static final String VIDEOS_LIST = "LV";
 	private static final String HISTORY_LIST = "LH";
 	private static final String REMOVE_HISTORY = "RH";
 	private static final String ADD_VIDEO_TO_FAVOURITES = "FV";
@@ -56,8 +66,9 @@ public class Main {
 	private static final String ADD_VIDEO_TO_FAVOURITES_SUCCESS = "Video adicionado a favoritos com sucesso.";
 	private static final String VIDEO_ALREADY_USER_FAVOURITE = "Video ja e favorito de nick.";
 	private static final String VIDEO_REMOVE_FROM_FAVOURITE_SUCCESS = "Video removido de favoritos com sucesso.";
-	private static final String VIDEO_NOT_USER_FAVOURITE = "Video nao e facorito do nick.";
+	private static final String VIDEO_NOT_USER_FAVOURITE = "Video nao e favorito de nick.";
 	private static final String USER_HAS_NO_FAVOURITES = "Utilizador nao tem favoritos.";
+	private static final String USER_HAS_NO_VIDEOS = "Nick nao inseriu videos.";
 	private static final String TAG_ADD_TO_VIDEO_SUCCESS = "Tag adicionada a video com sucesso.";
 	private static final String VIDEO_ALREADY_HAS_TAG = "Video ja tem tag.";
 	private static final String VIDEO_HAS_NO_TAGS = "Video nao tem tags.";
@@ -66,13 +77,9 @@ public class Main {
 	private static final String DATA_FILE = "TuVes.dat";
 	
 //	Main function responsible for the initialization of the whole program.
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException, IOException{
 		Scanner in = new Scanner(System.in);
-		PlayerClass p = new PlayerClass();
-		try {
-			p.load(DATA_FILE);
-		} catch (ClassNotFoundException | IOException e) {
-		}
+		PlayerClass p = load();
 		commandInterpreter(in, p);
 		in.close();
 	}
@@ -88,6 +95,7 @@ public class Main {
 				case INSERT_VIDEO: processInsertVideo(in, p); break;
 				case DISABLE_VIDEO: processDisableVideo(in, p); break;
 				case PLAY_VIDEO: processPlayVideo(in, p); break;
+				case VIDEOS_LIST: processVideosList(in, p); break;
 				case HISTORY_LIST: processHistoryList(in, p); break;
 				case REMOVE_HISTORY: processRemoveHistory(in, p); break;
 				case ADD_VIDEO_TO_FAVOURITES: processAddVideoToFavourites(in, p); break;
@@ -108,8 +116,12 @@ public class Main {
 		String nick = in.next();
 		String email = in.next();
 		String name = in.nextLine();
-		p.insertUser(nick, email, name);
-		System.out.println(USER_INSERT_SUCCESS);
+		try {
+			p.insertUser(nick, email, name);
+			System.out.println(USER_INSERT_SUCCESS);
+		} catch (UserAlreadyExistException e) {
+			System.out.println(USER_EXISTS);
+		}
 	}
 	private static void	 processInsertVideo(Scanner in, PlayerClass p) {
 		String idVideo = in.next();
@@ -120,6 +132,8 @@ public class Main {
 		try {
 			p.insertVideo(idVideo, nick, url, length, title);
 			System.out.println(VIDEO_INSERT_SUCCESS);
+		} catch(VideoAlreadyExistException e){
+			System.out.println(VIDEO_EXISTS);
 		} catch (NoSuchUserException e) {
 			System.out.println(NICK_DOES_NOT_EXIST);
 		} catch (InvalidLengthException e) {
@@ -149,6 +163,18 @@ public class Main {
 			System.out.println(NICK_DOES_NOT_EXIST);
 		} catch (DisabledVideoException e) {
 			System.out.println(DISABLED_VIDEO);
+		}
+	}
+	private static void	 processVideosList(Scanner in, PlayerClass p) {
+		String nick = in.next();
+		try{
+			System.out.println(p.listUserVideos(nick));			
+		}
+		catch(NoSuchUserException e){
+			System.out.println(NICK_DOES_NOT_EXIST);
+		}
+		catch(UserHasNoVideosException e){
+			System.out.println(USER_HAS_NO_VIDEOS);
 		}
 	}
 	private static void	 processHistoryList(Scanner in, PlayerClass p) {
@@ -245,7 +271,10 @@ public class Main {
 	private static void	 processVideoTagList(Scanner in, PlayerClass p) {
 		String idVideo = in.next();
 		try{
-			System.out.println(p.listTags(idVideo));
+			Iterator<String> listTags =  p.listTags(idVideo);
+			while (listTags.hasNext()){
+				System.out.println(listTags.next());
+			}
 		}
 		catch(NoSuchVideoException e){
 			System.out.println(VIDEO_DOES_NOT_EXIST);
@@ -265,10 +294,34 @@ public class Main {
 	}
 	private static void processExit(PlayerClass p){
 		try {
-			p.save(DATA_FILE);
+			save(p);
 			System.out.println(EXIT_MESSAGE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void save(PlayerClass p) throws IOException{
+		ObjectOutputStream file = new ObjectOutputStream(new FileOutputStream(DATA_FILE));
+		file.writeObject(p);
+		file.flush();
+		file.close();
+	}
+	
+	public static PlayerClass load() throws FileNotFoundException, IOException, ClassNotFoundException{
+		try{
+			ObjectInputStream file = new ObjectInputStream(new FileInputStream(DATA_FILE));
+			PlayerClass player = (PlayerClass) file.readObject();
+			file.close();
+			return player;
+		}
+		catch ( IOException e){
+		}
+		catch ( ClassNotFoundException e){
+		}
+		
+		PlayerClass player = new PlayerClass();
+		return player;
+
 	}
 }

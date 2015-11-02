@@ -5,15 +5,10 @@
 
 package tuVes;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import dataStructures.Iterator;
 
+import dataStructures.ChainedHashTable;
+import dataStructures.Iterator;
 import exceptions.AlreadyFavouriteException;
 import exceptions.AlreadyHasTagException;
 import exceptions.DisabledVideoException;
@@ -25,6 +20,9 @@ import exceptions.NoSuchTagException;
 import exceptions.NoSuchUserException;
 import exceptions.NoSuchVideoException;
 import exceptions.NoTagsInVideoException;
+import exceptions.UserAlreadyExistException;
+import exceptions.UserHasNoVideosException;
+import exceptions.VideoAlreadyExistException;
 
 public class PlayerClass implements Player, Serializable{
 
@@ -32,162 +30,297 @@ public class PlayerClass implements Player, Serializable{
 * @user - user added to the system
 * @video - video added to the system
 * @tag - tag assigned to video by user
+* 
+* @users Chained hash table of users added to the system
+* @videos Chained hash table of videos added to the system
+* @tags Chained hash table of tags added to the system
 ***/
 	private static final long serialVersionUID = 1L;
-	private UserSetter user;
-	private VideoSetter video;
-	private String tag;
+//  Phase 1 code
+//		private String tag = "";
+//		private UserSetter user;
+//		private VideoSetter video;
+//---------------------------------
+	private ChainedHashTable<String, UserSetter> users;
+	private ChainedHashTable<String, VideoSetter> videos;
+	private ChainedHashTable<String, VideoSetter> tags;
 	
 	public PlayerClass(){
-		user = null;
-		video = null;
-		tag = "";
+//  Phase 1 code
+//		tag = "";
+//		user = null;
+//		video = null;
+//---------------------------------
+
+		users = new ChainedHashTable<String, UserSetter>();
+		videos = new ChainedHashTable<String, VideoSetter>();
+		tags = new ChainedHashTable<String, VideoSetter>();
 	}
 	
-	public void insertUser(String nick, String email, String name){
-		User u = new UserClass(nick, email, name);
-		user = (UserSetter) u;
+	public void insertUser(String nick, String email, String name) throws UserAlreadyExistException{
+//  Phase 1 code
+//		UserSetter u = new UserClass(nick, email, name);
+//		user = (UserSetter) u;
+//---------------------------------
+		if(users.find(nick.toLowerCase()) != null){
+			throw new UserAlreadyExistException(); 
+		}
+		else{
+			UserSetter u = new UserClass(nick, email, name);
+			users.insert(nick.toLowerCase(), u);
+		}
 	}
 	
 	public void insertVideo(String idVideo, String nick, String url, long length,String title)
-			throws NoSuchUserException, InvalidLengthException {
-		if (user == null || !user.getNick().equals(nick))//SOLVE
+			throws NoSuchUserException, InvalidLengthException, VideoAlreadyExistException {
+//  Phase 1 code
+//		if (user == null || !user.getNick().equals(nick))//SOLVE
+//			throw new NoSuchUserException();
+//		else if ((length%1 != 0) || (length<=0))
+//			throw new InvalidLengthException();
+//		else{
+//			VideoSetter v = new VideoClass(idVideo, title, url, length);
+//			video = v;
+//			user.addVideo(v);
+//---------------------------------
+		if(videos.find(idVideo.toLowerCase()) != null)
+			throw new VideoAlreadyExistException(); 
+		else if (users.find(nick.toLowerCase()) == null)
 			throw new NoSuchUserException();
 		else if ((length%1 != 0) || (length<=0))
 			throw new InvalidLengthException();
 		else{
 			VideoSetter v = new VideoClass(idVideo, title, url, length);
-			video = v;
-			user.addVideo(v);
+			videos.insert(idVideo.toLowerCase(), v);
+			users.find(nick.toLowerCase()).addVideo(v);
 		}
+		
 	}
+	
 	
 	public void disableVideo(String idVideo) 
 			throws NoSuchVideoException, DisabledVideoException{
-		if (video == null || !video.getIdVideo().equals(idVideo))//SOLVE
+//  Phase 1 code
+//		if (video == null || !video.getIdVideo().equals(idVideo))//SOLVE
+//			throw new NoSuchVideoException();
+//		else if (video.isVideoDisabled())
+//			throw new DisabledVideoException();
+//		else
+//			video.disableVideo();
+//---------------------------------
+		VideoSetter v = videos.find(idVideo.toLowerCase());
+		if (v == null)//SOLVE
 			throw new NoSuchVideoException();
-		else if (video.isVideoDisabled())
+		else if (v.isVideoDisabled())
 			throw new DisabledVideoException();
 		else
-			video.disableVideo();
+			v.disableVideo();
 	}
 	
 	public void playVideo(String idVideo, String nick) 
 			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException {
-		if (video == null || !video.getIdVideo().equals(idVideo))//SOLVE
+//  Phase 1 code
+//		if (video == null || !video.getIdVideo().equals(idVideo))//SOLVE
+//			throw new NoSuchVideoException();
+//		else if (user == null || !user.getNick().equals(nick))//SOLVE
+//			throw new NoSuchUserException();
+//		else if (video.isVideoDisabled())
+//			throw new DisabledVideoException();
+//		else
+//			user.addVideoToHistory(video);
+//-----------------------------------------
+		VideoSetter v = videos.find(idVideo.toLowerCase());
+		UserSetter u = users.find(nick.toLowerCase());
+		if (v == null)//SOLVE
 			throw new NoSuchVideoException();
-		else if (user == null || !user.getNick().equals(nick))//SOLVE
+		else if (u == null)//SOLVE
 			throw new NoSuchUserException();
-		else if (video.isVideoDisabled())
+		else if (v.isVideoDisabled())
 			throw new DisabledVideoException();
 		else
-			user.addVideoToHistory(video);
+			u.addVideoToHistory(v);
+	}
+	
+	public String listUserVideos(String nick) throws NoSuchUserException, UserHasNoVideosException{
+		UserSetter u = users.find(nick.toLowerCase());
+		if (u == null)
+			throw new NoSuchUserException();
+		else if (!u.hasVideo())
+			throw new UserHasNoVideosException();
+		else
+			return u.listVideos();
 	}
 	
 	public Iterator<Video> listHistory(String nick)
 			throws NoSuchUserException, EmptyHistoryException {
-		if (user == null || !user.getNick().equals(nick))//SOLVE
+//  Phase 1 code
+//		if (user == null || !user.getNick().equals(nick))//SOLVE
+//			throw new NoSuchUserException();
+//		else if (!user.hasHistory())
+//			throw new EmptyHistoryException();
+//		else
+//			return user.viewedVideosIterator();
+//-----------------------------------------
+		UserSetter u = users.find(nick.toLowerCase());
+		if (u == null)//SOLVE
 			throw new NoSuchUserException();
-		else if (!user.hasHistory())
+		else if (!u.hasHistory())
 			throw new EmptyHistoryException();
 		else
-			return user.viewedVideosIterator();
+			return u.viewedVideosIterator();
 	}
 	
 	public void removeHistory(String nick)
 			throws NoSuchUserException{
-		if (user == null || !user.getNick().equals(nick))//SOLVE
+//  Phase 1 code
+//		if (user == null || !user.getNick().equals(nick))//SOLVE
+//			throw new NoSuchUserException();
+//		else
+//			user.removeViewedHistory();
+//-----------------------------------------
+		UserSetter u = users.find(nick.toLowerCase());
+		if (u == null)//SOLVE
 			throw new NoSuchUserException();
 		else
-			user.removeViewedHistory();
+			u.removeViewedHistory();
 	}
 	
 	public void addVideoToFavourites(String idVideo, String nick) 
 			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException, AlreadyFavouriteException{
-		if (video == null || !video.getIdVideo().equals(idVideo))
+//  Phase 1 code
+//		if (video == null || !video.getIdVideo().equals(idVideo))
+//			throw new NoSuchVideoException();
+//		else if (user == null || !user.getNick().equals(nick))
+//			throw new NoSuchUserException();
+//		else if (video.isVideoDisabled())
+//			throw new DisabledVideoException();
+//		else if (user.isFavourite(idVideo))
+//			throw new AlreadyFavouriteException();
+//		else
+//			user.addVideoToFavourite(video);
+//-----------------------------------------
+		UserSetter u = users.find(nick.toLowerCase());
+		VideoSetter v = videos.find(idVideo.toLowerCase());
+		if (v == null)
 			throw new NoSuchVideoException();
-		else if (user == null || !user.getNick().equals(nick))
+		else if (u == null)
 			throw new NoSuchUserException();
-		else if (video.isVideoDisabled())
+		else if (v.isVideoDisabled())
 			throw new DisabledVideoException();
-		else if (user.isFavourite(idVideo))
+		else if (u.isFavourite(idVideo))
 			throw new AlreadyFavouriteException();
 		else
-			user.addVideoToFavourite(video);
+			u.addVideoToFavourite(v);
+
 	}
 	
 	public void removeVideoFromFavourites(String idVideo, String nick) 
 			throws NoSuchVideoException, NoSuchUserException, NoFavouriteVideoException {
-		if (video == null || !video.getIdVideo().equals(idVideo))
+//	Phase 1 code
+//		if (video == null || !video.getIdVideo().equals(idVideo))
+//			throw new NoSuchVideoException();
+//		else if (user == null || !user.getNick().equals(nick))
+//			throw new NoSuchUserException();
+//		else if (!user.isFavourite(idVideo))
+//			throw new NoFavouriteVideoException();
+//		else
+//			user.removeVideoFromFavourite(idVideo);
+//------------------------------------------------
+		UserSetter u = users.find(nick.toLowerCase());
+		VideoSetter v = videos.find(idVideo.toLowerCase());
+		if (v == null)
 			throw new NoSuchVideoException();
-		else if (user == null || !user.getNick().equals(nick))
+		else if (u == null)
 			throw new NoSuchUserException();
-		else if (!user.isFavourite(idVideo))
+		else if (!u.isFavourite(idVideo))
 			throw new NoFavouriteVideoException();
 		else
-			user.removeVideoFromFavourite(idVideo);
+			u.removeVideoFromFavourite(idVideo);
 	}
 	
 	public String listFavourites(String nick) 
 			throws NoSuchUserException, NoFavouritesException{
-		if (user == null || !user.getNick().equals(nick))
+//	Phase 1 code
+//		if (user == null || !user.getNick().equals(nick))
+//			throw new NoSuchUserException();
+//		else if (!user.hasFavourite())
+//			throw new NoFavouritesException();
+//		else
+//			return user.favouriteVideos();
+//------------------------------------------------
+		UserSetter u = users.find(nick.toLowerCase());
+		if (u == null)
 			throw new NoSuchUserException();
-		else if (!user.hasFavourite())
+		else if (!u.hasFavourite())
 			throw new NoFavouritesException();
 		else
-			return user.favouriteVideos();
+			return u.favouriteVideos();
+
+
 	}
 	
 	public void addTagToVideo(String idVideo, String tag) 
 			throws NoSuchVideoException, DisabledVideoException, AlreadyHasTagException {
-		if(video == null || !video.getIdVideo().equals(idVideo))
+//	Phase 1 code
+//		if(video == null || !video.getIdVideo().equals(idVideo))
+//			throw new NoSuchVideoException();
+//		else if(video.isVideoDisabled())
+//			throw new DisabledVideoException();
+//		else if(video.hasTags())
+//			throw new AlreadyHasTagException();
+//		else{
+//			this.tag = tag;
+//			video.addTagToVideo(tag);	
+//		}
+// -----------------------------------		
+		VideoSetter v = videos.find(idVideo.toLowerCase());
+		if(v == null)
 			throw new NoSuchVideoException();
-		else if(video.isVideoDisabled())
+		else if(v.isVideoDisabled())
 			throw new DisabledVideoException();
-		else if(video.hasTags())
+		else if(v.hasTag(tag))
 			throw new AlreadyHasTagException();
 		else{
-			this.tag = tag;
-			video.addTagToVideo(tag);	
+			v.addTagToVideo(tag);
+			tags.insert(tag.toLowerCase(), v);
 		}
 	}
 	
-	public String listTags(String idVideo) 
+	public Iterator<String> listTags(String idVideo) 
 			throws NoSuchVideoException, NoTagsInVideoException{
-		if (video == null || !video.getIdVideo().equals(idVideo))
+//	Phase 1 code
+//		if (video == null || !video.getIdVideo().equals(idVideo))
+//			throw new NoSuchVideoException();
+//		else if (!video.hasTags())
+//			throw new NoTagsInVideoException();
+//		else
+//			return video.getTag();
+//------------------------------------------------
+		VideoSetter v = videos.find(idVideo.toLowerCase());
+		if (v == null)
 			throw new NoSuchVideoException();
-		else if (!video.hasTags())
+		else if (!v.hasAnyTag())
 			throw new NoTagsInVideoException();
 		else
-			return video.getTag();
+			return v.getTags();
 			
 	}
 	
 	public String searchTag(String tag) 
 		throws NoSuchTagException{
-		if (!this.tag.equals(tag))
+//	Phase 1 code
+//		if (!this.tag.equals(tag))
+//			throw new NoSuchTagException();
+//		else
+//			if(video.getTag().equals(tag)){
+//				return video.getVideoInfo();
+//			}
+//		return null;
+//------------------------------------------------
+		Video v = tags.find(tag.toLowerCase());
+		if (v == null)
 			throw new NoSuchTagException();
 		else
-			if(video.getTag().equals(tag)){
-				return video.getVideoInfo();
-			}
-		return null;
-	}
-	
-	public void load(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException{
-		ObjectInputStream file = new ObjectInputStream(new FileInputStream(fileName));
-		user = (UserSetter) file.readObject();
-		video = (VideoSetter) file.readObject();
-		tag = (String) file.readObject();
-		file.close();
-	}
-	
-	public void save(String fileName)  throws IOException{
-		ObjectOutputStream file = new ObjectOutputStream(new FileOutputStream(fileName));
-		file.writeObject(user);
-		file.writeObject(video);
-		file.writeObject(tag);
-		file.flush();
-		file.close();
+			return v.getVideoInfo();	
 	}
 }

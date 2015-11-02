@@ -5,6 +5,8 @@
 
 package tuVes;
 
+import dataStructures.Iterator;
+
 public interface Video {
 	
 	//Returns private variable IdVideo
@@ -21,7 +23,7 @@ public interface Video {
 	public String getStatus();
 	
 	//Returns Tag assigned to video
-	public String getTag();
+	public  Iterator<String> getTags();
 	
 	//Returns video information in form: "IdVideo Title Length Status"
 	public String getVideoInfo();
@@ -34,6 +36,10 @@ public interface Video {
 	
 	//Returns boolean value true if video is has any Tag
 	//and false if video has not.
-	public boolean hasTags();
+	public boolean hasAnyTag();
+	
+	//Returns boolean value true if video is has specific Tag passed as a variable
+	//and false if video has not.
+	public boolean hasTag(String tag);
 	
 }

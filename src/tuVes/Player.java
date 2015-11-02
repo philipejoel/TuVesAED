@@ -5,8 +5,6 @@
 
 package tuVes;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import dataStructures.Iterator;
 
 import exceptions.AlreadyFavouriteException;
@@ -20,15 +18,19 @@ import exceptions.NoSuchTagException;
 import exceptions.NoSuchUserException;
 import exceptions.NoSuchVideoException;
 import exceptions.NoTagsInVideoException;
+import exceptions.UserAlreadyExistException;
+import exceptions.UserHasNoVideosException;
+import exceptions.VideoAlreadyExistException;
 
 public interface Player {
 
 	// Inserts a user in the system.
-	public void insertUser(String nick, String email, String name);
+	public void insertUser(String nick, String email, String name) 
+			throws UserAlreadyExistException;
 	
 	// Inserts a video in the system.
 	public void insertVideo(String idVideo, String nick, String URL, long length, String title)
-			throws NoSuchUserException, InvalidLengthException ;
+			throws NoSuchUserException, InvalidLengthException, VideoAlreadyExistException ;
 	
 	// Disables a video.
 	public void disableVideo(String idVideo) 
@@ -36,7 +38,9 @@ public interface Player {
 	
 	// Plays a video.
 	public void playVideo(String idVide, String nick)
-			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException ;
+			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException;
+	
+	public String listUserVideos(String nick) throws NoSuchUserException, UserHasNoVideosException;
 	
 	// Returns an iterator of viewed videos.
 	public Iterator<Video> listHistory(String nick)
@@ -62,17 +66,11 @@ public interface Player {
 			throws NoSuchVideoException, DisabledVideoException, AlreadyHasTagException;
 	
 	// Returns the information related to a video's tags.
-	public String listTags(String idVideo) 
+	public Iterator<String> listTags(String idVideo)
 			throws NoSuchVideoException, NoTagsInVideoException;
 	
 	// Returns the information related to a video to which the tag was assigned.
 	public String searchTag(String tag) 
 			throws NoSuchTagException;
-	
-	// Loads the system from a file.
-	public void load(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException;
-	
-	// Saves the system to a file.
-	public void save(String fileName)  throws IOException;
 	
 }

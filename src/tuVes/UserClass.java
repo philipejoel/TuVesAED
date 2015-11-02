@@ -70,6 +70,10 @@ public class UserClass implements UserSetter, Serializable{
 	public String favouriteVideos() {
 		return this.favouriteVideo.getVideoInfo();
 	}
+
+	public String listVideos() {
+		return this.video.getVideoInfo();
+	}
 	
 	public void removeViewedHistory() {
 		this.viewedHistroy.clear();
@@ -89,5 +93,9 @@ public class UserClass implements UserSetter, Serializable{
 	
 	public String getNick() {
 		return this.nick;
+	}
+	
+	public boolean hasVideo(){
+		return (video != null);
 	}
 }

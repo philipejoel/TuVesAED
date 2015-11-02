@@ -7,11 +7,13 @@ package tuVes;
 
 import java.io.Serializable;
 
+
+import dataStructures.DoublyLinkedList;
+import dataStructures.Iterator;
+import dataStructures.List;
+
 public class VideoClass implements VideoSetter, Serializable{
-
-
 	private static final long serialVersionUID = 1L;
-
 /***
 * @idVideo - id of video
 * @title - title of video
@@ -22,7 +24,7 @@ public class VideoClass implements VideoSetter, Serializable{
 ***/
 	private String idVideo;
 	private String title;
-	private String tag;
+	private List<String> tags;
 	private String url;
 	private boolean isDisabled;
 	private long length;
@@ -32,7 +34,7 @@ public class VideoClass implements VideoSetter, Serializable{
 		this.title = title;
 		this.url = url;
 		this.isDisabled = false;
-		this.tag = null;
+		tags = new DoublyLinkedList();
 		this.length = length;
 	}
 	
@@ -61,15 +63,26 @@ public class VideoClass implements VideoSetter, Serializable{
 	}
 	
 	public void addTagToVideo(String tag) {
-		this.tag = tag;
+		tags.addLast(tag);
 	}
 	
-	public boolean hasTags(){
-		return (tag != null);
+	public boolean hasAnyTag(){
+		return (!tags.isEmpty());
 	}	
 	
-	public String getTag(){
-		return tag;
+	public boolean hasTag(String tag){
+		Iterator<String> tagIterator = tags.iterator();
+		while(tagIterator.hasNext()){
+			if(tagIterator.next().equalsIgnoreCase(tag)){
+				return true;
+			}
+		}
+		return false;
+			
+	}
+	
+	public Iterator<String> getTags(){
+		return tags.iterator();
 	}
 	
 	public String getVideoInfo(){

@@ -18,8 +18,11 @@ public interface User {
 	public Iterator<Video> viewedVideosIterator() 
 			throws EmptyHistoryException;
 	
-	// Returns information related to the user's favourite videos (only one in the first phase).
+	// Returns information related to the user's favourite videos.
 	public String favouriteVideos();
+	
+	//Returns information about user's videos.
+	public String listVideos();
 	
 	// Returns true if the user viewed at least one video after cleaning the history.
 	public boolean hasHistory();
@@ -29,5 +32,7 @@ public interface User {
 	
 	// Returns the user's nick.
 	public String getNick();
+	
+	boolean hasVideo();
 	
 }
