@@ -25,7 +25,9 @@ public class UserClass implements UserSetter, Serializable{
 ***/
 	private static final long serialVersionUID = 1L;
 	private String nick;
+	@SuppressWarnings("unused")
 	private String name;
+	@SuppressWarnings("unused")
 	private String email;
 	private Video video;
 	private Video favouriteVideo;
@@ -63,8 +65,7 @@ public class UserClass implements UserSetter, Serializable{
 		if(viewedHistroy.isEmpty())
 			throw new EmptyHistoryException();
 		else
-			return viewedHistroy.iterator();
-			//return (Iterator<Video>) viewedHistroy.iterator();	
+			return viewedHistroy.iterator();	
 	}
 	
 	public String favouriteVideos() {

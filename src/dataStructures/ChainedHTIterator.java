@@ -1,3 +1,7 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
 package dataStructures;
 
 public class ChainedHTIterator<K,V> implements TwoWayIterator<Entry <K,V>>{
@@ -15,7 +19,7 @@ public class ChainedHTIterator<K,V> implements TwoWayIterator<Entry <K,V>>{
 		this.table = table;
 		this.rewind();
 	}
-	
+	// Finds and returns the next
 	private TwoWayIterator<Entry<K,V>> findNextNotNull(){
 		for(int i = currentIndex+1; i < table.length; i++){
 			if(!table[i].isEmpty()){

@@ -25,6 +25,7 @@ public class VideoClass implements VideoSetter, Serializable{
 	private String idVideo;
 	private String title;
 	private List<String> tags;
+	@SuppressWarnings("unused")
 	private String url;
 	private boolean isDisabled;
 	private long length;
@@ -34,7 +35,7 @@ public class VideoClass implements VideoSetter, Serializable{
 		this.title = title;
 		this.url = url;
 		this.isDisabled = false;
-		tags = new DoublyLinkedList();
+		tags = new DoublyLinkedList<String>();
 		this.length = length;
 	}
 	
@@ -78,7 +79,6 @@ public class VideoClass implements VideoSetter, Serializable{
 			}
 		}
 		return false;
-			
 	}
 	
 	public Iterator<String> getTags(){

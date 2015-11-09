@@ -54,7 +54,6 @@ public class Main {
 	private static final String USER_EXISTS = "Utilizador existente.";
 	private static final String VIDEO_INSERT_SUCCESS = "Video adicionado com sucesso.";
 	private static final String VIDEO_EXISTS = "Video existente.";
-	private static final String NICK_EXISTS = "Nick existente.";
 	private static final String INVALID_LENGTH = "Duracao invalida.";
 	private static final String VIDEO_DISABLE_SUCCESS = "Video desativado com sucesso.";
 	private static final String VIDEO_DOES_NOT_EXIST = "Video inexistente.";
@@ -307,7 +306,6 @@ public class Main {
 		file.flush();
 		file.close();
 	}
-	
 	public static PlayerClass load() throws FileNotFoundException, IOException, ClassNotFoundException{
 		try{
 			ObjectInputStream file = new ObjectInputStream(new FileInputStream(DATA_FILE));

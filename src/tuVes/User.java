@@ -33,6 +33,7 @@ public interface User {
 	// Returns the user's nick.
 	public String getNick();
 	
+	// Returns true if the user has any video (inserted by him).
 	boolean hasVideo();
 	
 }

@@ -1,3 +1,7 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
 package dataStructures;  
 
 public class ChainedHashTable<K extends Comparable<K>, V> 
@@ -64,30 +68,36 @@ public class ChainedHashTable<K extends Comparable<K>, V>
         }
     }
 
-
+    // Doubles the table's size repositioning all of its elements.
     private void rehash() {
 		// TODO Auto-generated method stub
-    	Dictionary<K,V>[] oldTable = table;
+    	Iterator<Entry<K, V>> oldTableIterator = this.iterator();
     	this.clearAndIncreaseSize();
+    	while (oldTableIterator.hasNext()){
+  		  Entry<K, V> currentEntry = oldTableIterator.next();
+  	      this.insert(currentEntry.getKey(), currentEntry.getValue());
+  		}
+    	
     	// reasign variable from table to newTable
-    	for(Dictionary<K,V> oldValue : oldTable){
-    		if(oldValue != null){
-    			Iterator<Entry<K, V>> entry = oldValue.iterator();
-    			while (entry.hasNext()){
-    		      this.insert(entry.next().getKey(), entry.next().getValue());
-    			}
-    		}
-    	}
+//    	for(Dictionary<K,V> oldValue : oldTable){
+//    		if(oldValue != null){
+//    			Iterator<Entry<K, V>> entry = oldValue.iterator();
+//    			while (entry.hasNext()){
+//    			  Entry<K, V> currentEntry = entry.next();
+//    		      this.insert(currentEntry.getKey(), currentEntry.getValue());
+//    			}
+//    		}
+//    	}
+		
     }
-
-    @SuppressWarnings("unchecked")
+    // Clears table and doubles its size.
+	@SuppressWarnings("unchecked")
 	private void clearAndIncreaseSize(){
     	maxSize *= 2;
         int arraySize = HashTable.nextPrime((int) (1.1 * maxSize));
         // Compiler gives a warning.
         table = (Dictionary<K,V>[]) new Dictionary[arraySize];
         for ( int i = 0; i < arraySize; i++ )
-            //TODO: Original comentado para nao dar erro de compilacao.
             table[i] = new OrderedDoubleList<K,V>();
         currentSize = 0;
     }
