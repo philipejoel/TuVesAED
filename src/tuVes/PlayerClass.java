@@ -36,10 +36,15 @@ public class PlayerClass implements Player, Serializable{
 	private ChainedHashTable<String, VideoSetter> videos;
 	private ChainedHashTable<String, VideoSetter> tags;
 	
+    public static final int USER_INIT_CAPPACITY = 50;
+    public static final int VIDEO_INIT_CAPPACITY = 50;
+    public static final int TAGS_INIT_CAPPACITY = 50;
+
+
 	public PlayerClass(){
-		users = new ChainedHashTable<String, UserSetter>();
-		videos = new ChainedHashTable<String, VideoSetter>();
-		tags = new ChainedHashTable<String, VideoSetter>();
+		users = new ChainedHashTable<String, UserSetter>(USER_INIT_CAPPACITY);
+		videos = new ChainedHashTable<String, VideoSetter>(VIDEO_INIT_CAPPACITY);
+		tags = new ChainedHashTable<String, VideoSetter>(TAGS_INIT_CAPPACITY);
 	}
 	
 	public void insertUser(String nick, String email, String name) throws UserAlreadyExistException{

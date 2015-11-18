@@ -54,18 +54,11 @@ public class ChainedHashTable<K extends Comparable<K>, V>
     // otherwise, inserts the entry (key, value) and returns null.
     public V insert( K key, V value )
     {
-        if ( this.isFull() ){
-            //TODO: Original comentado para nao dar erro de compilacao.
-            this.rehash();
-            return null;
-        }
-        else{
-	        //TODO: Left as an exercise.
-	    	V val = table[ this.hash(key) ].insert(key, value);
-	    	if(val == null)
-	    		currentSize++;
-	        return val;
-        }
+        if (this.isFull()) this.rehash();
+        V val = table[ this.hash(key) ].insert(key, value);
+        if(val == null)
+        	currentSize++;
+        return val;
     }
 
     // Doubles the table's size repositioning all of its elements.

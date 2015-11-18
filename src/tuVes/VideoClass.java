@@ -9,8 +9,10 @@ import java.io.Serializable;
 
 
 import dataStructures.DoublyLinkedList;
+import dataStructures.IterableQueue;
 import dataStructures.Iterator;
 import dataStructures.List;
+import dataStructures.QueueInList;
 
 public class VideoClass implements VideoSetter, Serializable{
 	private static final long serialVersionUID = 1L;
@@ -24,7 +26,7 @@ public class VideoClass implements VideoSetter, Serializable{
 ***/
 	private String idVideo;
 	private String title;
-	private List<String> tags;
+	private IterableQueue<String> tags;
 	@SuppressWarnings("unused")
 	private String url;
 	private boolean isDisabled;
@@ -35,7 +37,7 @@ public class VideoClass implements VideoSetter, Serializable{
 		this.title = title;
 		this.url = url;
 		this.isDisabled = false;
-		tags = new DoublyLinkedList<String>();
+		tags = new QueueInList<String>();
 		this.length = length;
 	}
 	
@@ -64,7 +66,7 @@ public class VideoClass implements VideoSetter, Serializable{
 	}
 	
 	public void addTagToVideo(String tag) {
-		tags.addLast(tag);
+		tags.enqueue(tag);
 	}
 	
 	public boolean hasAnyTag(){
