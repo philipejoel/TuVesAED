@@ -6,6 +6,7 @@
 package tuVes;
 
 
+import dataStructures.Entry;
 import dataStructures.Iterator;
 import exceptions.EmptyHistoryException;
 
@@ -19,10 +20,10 @@ public interface User {
 			throws EmptyHistoryException;
 	
 	// Returns information related to the user's favourite videos.
-	public String favouriteVideos();
+	public Iterator<Entry<String, Video>> getFavouriteVideosIterator();
 	
 	//Returns information about user's videos.
-	public String listVideos();
+	public Iterator<Entry<String, Video>> getVideosIterator();
 	
 	// Returns true if the user viewed at least one video after cleaning the history.
 	public boolean hasHistory();

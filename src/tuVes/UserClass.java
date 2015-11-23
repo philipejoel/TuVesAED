@@ -7,8 +7,11 @@ package tuVes;
 
 import java.io.Serializable;
 
+import dataStructures.BinarySearchTree;
+import dataStructures.Entry;
 import dataStructures.IterableStack;
 import dataStructures.Iterator;
+import dataStructures.OrderedDictionary;
 import dataStructures.StackInList;
 import exceptions.EmptyHistoryException;
 
@@ -29,8 +32,10 @@ public class UserClass implements UserSetter, Serializable{
 	private String name;
 	@SuppressWarnings("unused")
 	private String email;
-	private Video video;
+	private Video video; //TO DELETE
+	private OrderedDictionary<String, Video> videos;
 	private Video favouriteVideo;
+	private OrderedDictionary<String, Video> favouriteVideos;
 	private IterableStack<Video> viewedHistroy;
 	
 	public UserClass(String nick, String email, String name){
@@ -39,14 +44,18 @@ public class UserClass implements UserSetter, Serializable{
 		this.name = name;
 		this.viewedHistroy = new StackInList<>();
 		this.favouriteVideo = null;
+		this.videos = new BinarySearchTree<>();
+		this.favouriteVideos = new BinarySearchTree<>();
 	}
 	
 	public void addVideo(Video video) {
-		this.video = video;
+		//this.video = video; //TO DELETE
+		this.videos.insert(video.getIdVideo().toLowerCase(), video); //Ask about efficiency 
 	}
 	
 	public void addVideoToFavourite(Video video) {
-		this.favouriteVideo = video;
+		//this.favouriteVideo = video; TO DELETE
+		this.favouriteVideos.insert(video.getIdVideo().toLowerCase(), video);
 	}
 	
 	public void addVideoToHistory(Video video) {
@@ -54,10 +63,11 @@ public class UserClass implements UserSetter, Serializable{
 	}
 	
 	public boolean isFavourite(String idVideo){
-		if (favouriteVideo == null)
-			return false;
-		else
-			return favouriteVideo.getIdVideo().equals(idVideo);
+//		if (favouriteVideo == null)
+//			return false;
+//		else
+//			return favouriteVideo.getIdVideo().equals(idVideo);
+		return favouriteVideos.find(idVideo.toLowerCase()) != null;
 	}
 	
 	public Iterator<Video> viewedVideosIterator() 
@@ -68,12 +78,20 @@ public class UserClass implements UserSetter, Serializable{
 			return viewedHistroy.iterator();	
 	}
 	
-	public String favouriteVideos() {
+	/*public String favouriteVideos() {
 		return this.favouriteVideo.getVideoInfo();
+	}*/
+	
+	public Iterator<Entry<String, Video>> getFavouriteVideosIterator(){
+		return favouriteVideos.iterator();
 	}
 
-	public String listVideos() {
+	/*public String listVideos() {
 		return this.video.getVideoInfo();
+	}*/
+	
+	public Iterator<Entry<String, Video>> getVideosIterator(){
+		return videos.iterator();
 	}
 	
 	public void removeViewedHistory() {
@@ -85,11 +103,12 @@ public class UserClass implements UserSetter, Serializable{
 	}
 	
 	public boolean hasFavourite(){
-		return (favouriteVideo != null);
+		return !favouriteVideos.isEmpty();
 	}
 	
 	public void removeVideoFromFavourite(String idVideo) {
-		favouriteVideo = null;
+//		favouriteVideo = null;
+		favouriteVideos.remove(idVideo.toLowerCase());
 	}
 	
 	public String getNick() {
@@ -97,6 +116,6 @@ public class UserClass implements UserSetter, Serializable{
 	}
 	
 	public boolean hasVideo(){
-		return (video != null);
+		return !videos.isEmpty();
 	}
 }

@@ -5,6 +5,7 @@
 
 package tuVes;
 
+import dataStructures.Entry;
 import dataStructures.Iterator;
 
 import exceptions.AlreadyFavouriteException;
@@ -40,10 +41,14 @@ public interface Player {
 	public void playVideo(String idVide, String nick)
 			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException;
 	
-	public String listUserVideos(String nick) throws NoSuchUserException, UserHasNoVideosException;
+	/*public String listUserVideos(String nick) 
+	 * throws NoSuchUserException, UserHasNoVideosException;*/
+	
+	public Iterator<Entry<String, Video>> getUserVideosIterator(String nick) 
+			throws NoSuchUserException, UserHasNoVideosException;
 	
 	// Returns an iterator of viewed videos.
-	public Iterator<Video> listHistory(String nick)
+	public Iterator<Video> listHistoryIterator(String nick)
 			throws NoSuchUserException, EmptyHistoryException;
 	
 	// Cleans the viewed videos history.
@@ -59,18 +64,18 @@ public interface Player {
 			throws NoSuchVideoException, NoSuchUserException, NoFavouriteVideoException;
 	
 	// Returns the information related an user's favourite videos.
-	public String listFavourites(String nick) 
+	public Iterator<Entry<String, Video>> listFavouritesIterator(String nick) 
 			throws NoSuchUserException, NoFavouritesException;
 	// Adds a tag to a video.
 	public void addTagToVideo(String idVideo, String tag) 
 			throws NoSuchVideoException, DisabledVideoException, AlreadyHasTagException;
 	
 	// Returns the information related to a video's tags.
-	public Iterator<String> listTags(String idVideo)
+	public Iterator<String> listTagsIterator(String idVideo)
 			throws NoSuchVideoException, NoTagsInVideoException;
 	
 	// Returns the information related to a video to which the tag was assigned.
-	public String searchTag(String tag) 
+	public Iterator<Entry<String, Video>> getTagVideosIterator(String tag)
 			throws NoSuchTagException;
 	
 }

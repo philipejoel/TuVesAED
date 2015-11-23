@@ -7,8 +7,11 @@ package tuVes;
 
 import java.io.Serializable;
 
+import dataStructures.BinarySearchTree;
 import dataStructures.ChainedHashTable;
+import dataStructures.Entry;
 import dataStructures.Iterator;
+import dataStructures.OrderedDictionary;
 import exceptions.AlreadyFavouriteException;
 import exceptions.AlreadyHasTagException;
 import exceptions.DisabledVideoException;
@@ -32,19 +35,22 @@ public class PlayerClass implements Player, Serializable{
 * @tags Chained hash table of tags added to the system
 ***/
 	private static final long serialVersionUID = 1L;
-	private ChainedHashTable<String, UserSetter> users;
-	private ChainedHashTable<String, VideoSetter> videos;
-	private ChainedHashTable<String, VideoSetter> tags;
+	private OrderedDictionary<String, UserSetter> users;
+	private OrderedDictionary<String, VideoSetter> videos;
+//	private ChainedHashTable<String, VideoSetter> tags;
 	
-    public static final int USER_INIT_CAPPACITY = 50;
-    public static final int VIDEO_INIT_CAPPACITY = 50;
-    public static final int TAGS_INIT_CAPPACITY = 50;
+	private OrderedDictionary<String, OrderedDictionary<String, Video>> tags;
+
+	
+    public static final int USER_INIT_CAPPACITY = 30;
+    public static final int VIDEO_INIT_CAPPACITY = 30;
+    public static final int TAGS_INIT_CAPPACITY = 30;
 
 
 	public PlayerClass(){
-		users = new ChainedHashTable<String, UserSetter>(USER_INIT_CAPPACITY);
-		videos = new ChainedHashTable<String, VideoSetter>(VIDEO_INIT_CAPPACITY);
-		tags = new ChainedHashTable<String, VideoSetter>(TAGS_INIT_CAPPACITY);
+		users = new BinarySearchTree<String, UserSetter>();
+		videos = new BinarySearchTree<String, VideoSetter>();
+		tags = new BinarySearchTree<String, OrderedDictionary<String, Video>>();
 	}
 	
 	public void insertUser(String nick, String email, String name) throws UserAlreadyExistException{
@@ -88,20 +94,20 @@ public class PlayerClass implements Player, Serializable{
 	
 	public void playVideo(String idVideo, String nick) 
 			throws NoSuchVideoException, NoSuchUserException, DisabledVideoException {
-
+		
 		VideoSetter v = videos.find(idVideo.toLowerCase());
 		UserSetter u = users.find(nick.toLowerCase());
 		if (v == null)//SOLVE
 			throw new NoSuchVideoException();
-		else if (u == null)//SOLVE
-			throw new NoSuchUserException();
 		else if (v.isVideoDisabled())
 			throw new DisabledVideoException();
+		else if (u == null)//SOLVE
+			throw new NoSuchUserException();
 		else
 			u.addVideoToHistory(v);
 	}
 	
-	public String listUserVideos(String nick) throws NoSuchUserException, UserHasNoVideosException{
+	/*public String listUserVideos(String nick) throws NoSuchUserException, UserHasNoVideosException{
 		UserSetter u = users.find(nick.toLowerCase());
 		if (u == null)
 			throw new NoSuchUserException();
@@ -109,9 +115,21 @@ public class PlayerClass implements Player, Serializable{
 			throw new UserHasNoVideosException();
 		else
 			return u.listVideos();
+	}*/
+	
+	public Iterator<Entry<String, Video>> getUserVideosIterator(String nick) 
+throws NoSuchUserException, UserHasNoVideosException{
+		UserSetter u = users.find(nick.toLowerCase());
+		if (u == null)
+			throw new NoSuchUserException();
+		else if (!u.hasVideo())
+			throw new UserHasNoVideosException();
+		else
+			return u.getVideosIterator();
 	}
 	
-	public Iterator<Video> listHistory(String nick)
+	
+	public Iterator<Video> listHistoryIterator(String nick)
 			throws NoSuchUserException, EmptyHistoryException {
 
 		UserSetter u = users.find(nick.toLowerCase());
@@ -166,7 +184,7 @@ public class PlayerClass implements Player, Serializable{
 			u.removeVideoFromFavourite(idVideo);
 	}
 	
-	public String listFavourites(String nick) 
+	/*public String listFavourites(String nick) 
 			throws NoSuchUserException, NoFavouritesException{
 
 		UserSetter u = users.find(nick.toLowerCase());
@@ -176,25 +194,46 @@ public class PlayerClass implements Player, Serializable{
 			throw new NoFavouritesException();
 		else
 			return u.favouriteVideos();
+	}*/
+	
+	public Iterator<Entry<String, Video>> listFavouritesIterator(String nick) 
+			throws NoSuchUserException, NoFavouritesException{
+
+		UserSetter u = users.find(nick.toLowerCase());
+		if (u == null)
+			throw new NoSuchUserException();
+		else if (!u.hasFavourite())
+			throw new NoFavouritesException();
+		else
+			return u.getFavouriteVideosIterator();
 	}
 	
 	public void addTagToVideo(String idVideo, String tag) 
 			throws NoSuchVideoException, DisabledVideoException, AlreadyHasTagException {
 
 		VideoSetter v = videos.find(idVideo.toLowerCase());
+		OrderedDictionary<String, Video> currentTagVideos = tags.find(tag.toLowerCase());
 		if(v == null)
 			throw new NoSuchVideoException();
 		else if(v.isVideoDisabled())
 			throw new DisabledVideoException();
-		else if (v.equals(tags.find(tag.toLowerCase())))
+		else if (currentTagVideos != null && v.equals(currentTagVideos.find(idVideo.toLowerCase())))
 			throw new AlreadyHasTagException();
 		else{
 			v.addTagToVideo(tag);
-			tags.insert(tag.toLowerCase(), v);
+			
+			if(currentTagVideos != null){
+				currentTagVideos.insert(idVideo.toLowerCase(), v);
+			}
+			else{
+				OrderedDictionary<String, Video> newTag = new BinarySearchTree<String, Video>();
+				newTag.insert(idVideo.toLowerCase(), v);
+				tags.insert(tag.toLowerCase(), newTag);
+			}
 		}
-	}
+	} 
 	
-	public Iterator<String> listTags(String idVideo) 
+	public Iterator<String> listTagsIterator(String idVideo) 
 			throws NoSuchVideoException, NoTagsInVideoException{
 
 		VideoSetter v = videos.find(idVideo.toLowerCase());
@@ -206,7 +245,7 @@ public class PlayerClass implements Player, Serializable{
 			return v.getTags();
 	}
 	
-	public String searchTag(String tag) 
+	/*public String searchTag(String tag) 
 		throws NoSuchTagException{
 		
 		Video v = tags.find(tag.toLowerCase());
@@ -214,5 +253,14 @@ public class PlayerClass implements Player, Serializable{
 			throw new NoSuchTagException();
 		else
 			return v.getVideoInfo();	
+	}*/
+	
+	public Iterator<Entry<String, Video>> getTagVideosIterator(String tag) 
+		throws NoSuchTagException{
+	
+		if (tags.find(tag.toLowerCase()) == null)
+			throw new NoSuchTagException();
+		else
+			return tags.find(tag.toLowerCase()).iterator();	
 	}
 }

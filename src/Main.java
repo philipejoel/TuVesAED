@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
+import dataStructures.Entry;
 import dataStructures.Iterator;
 
 import exceptions.AlreadyFavouriteException;
@@ -127,7 +128,8 @@ public class Main {
 		String nick = in.next();
 		String url = in.next();
 		long length = in.nextInt();
-		String title = in.nextLine().replaceAll("^ *", "");
+		String title = in.nextLine().replaceAll("^ *", "").replaceAll(" *$", "");
+		title.replaceAll(" *$", "");
 		try {
 			p.insertVideo(idVideo, nick, url, length, title);
 			System.out.println(VIDEO_INSERT_SUCCESS);
@@ -167,7 +169,10 @@ public class Main {
 	private static void	 processVideosList(Scanner in, PlayerClass p) {
 		String nick = in.next();
 		try{
-			System.out.println(p.listUserVideos(nick));			
+			Iterator<Entry<String, Video>> VideosIteator = p.getUserVideosIterator(nick);
+			while (VideosIteator.hasNext()){
+				System.out.println(VideosIteator.next().getValue().getVideoInfo());
+			}
 		}
 		catch(NoSuchUserException e){
 			System.out.println(NICK_DOES_NOT_EXIST);
@@ -179,7 +184,7 @@ public class Main {
 	private static void	 processHistoryList(Scanner in, PlayerClass p) {
 		String nick = in.next();
 		try{
-			Iterator<Video> historyIterator = (Iterator<Video>) p.listHistory(nick);
+			Iterator<Video> historyIterator = (Iterator<Video>) p.listHistoryIterator(nick);
 			while (historyIterator.hasNext()){
 				System.out.println(historyIterator.next().getVideoInfo());
 			}
@@ -241,7 +246,10 @@ public class Main {
 	private static void	 processFavouriteList(Scanner in, PlayerClass p) {
 		String nick = in.next();
 		try{
-			System.out.println(p.listFavourites(nick));			
+			Iterator<Entry<String, Video>> VideosFavoritesIteator = p.listFavouritesIterator(nick);
+			while (VideosFavoritesIteator.hasNext()){
+				System.out.println(VideosFavoritesIteator.next().getValue().getVideoInfo());
+			}
 		}
 		catch(NoSuchUserException e){
 			System.out.println(NICK_DOES_NOT_EXIST);
@@ -270,7 +278,7 @@ public class Main {
 	private static void	 processVideoTagList(Scanner in, PlayerClass p) {
 		String idVideo = in.next();
 		try{
-			Iterator<String> listTags =  p.listTags(idVideo);
+			Iterator<String> listTags =  p.listTagsIterator(idVideo);
 			while (listTags.hasNext()){
 				System.out.println(listTags.next());
 			}
@@ -285,7 +293,10 @@ public class Main {
 	private static void	 processSearchTag(Scanner in, PlayerClass p) {
 		String tag = in.next();
 		try{
-			System.out.println(p.searchTag(tag));
+			//System.out.println(p.searchTag(tag));
+			Iterator<Entry<String, Video>> it = p.getTagVideosIterator(tag);
+			while (it.hasNext())
+				System.out.println(it.next().getValue().getVideoInfo());
 		}
 		catch(NoSuchTagException e){
 			System.out.println(TAG_DOES_NOT_EXIST);
