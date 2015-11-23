@@ -9,7 +9,7 @@ public class EntryClass<K, V> implements Entry<K, V> {
 
 	private static final long serialVersionUID = 1L;
 	protected K key;
-	public V value;
+	protected V value;
 	
 	public EntryClass (K key, V value){
 		this.key = key;

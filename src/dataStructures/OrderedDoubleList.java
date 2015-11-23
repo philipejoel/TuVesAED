@@ -33,7 +33,6 @@ public class OrderedDoubleList <K extends Comparable <K>, V> implements OrderedD
 
 	public V find(K key) {
 		DListNode<Entry <K, V>> node = head;
-		int tempCompareResult = -1;
 		
         while (node != null && node.getElement().getKey().compareTo(key) != 0){
         	node = node.getNext();

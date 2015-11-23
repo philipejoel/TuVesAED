@@ -6,12 +6,8 @@
 package tuVes;
 
 import java.io.Serializable;
-
-
-import dataStructures.DoublyLinkedList;
 import dataStructures.IterableQueue;
 import dataStructures.Iterator;
-import dataStructures.List;
 import dataStructures.QueueInList;
 
 public class VideoClass implements VideoSetter, Serializable{
