@@ -35,14 +35,9 @@ public class OrderedDoubleList <K extends Comparable <K>, V> implements OrderedD
 		DListNode<Entry <K, V>> node = head;
 		int tempCompareResult = -1;
 		
-        while (node != null && tempCompareResult != 0){
-        	node.getNext();
-        	tempCompareResult = node.getElement().getKey().compareTo(key);
-        	if(tempCompareResult > 0)
-				return null;
+        while (node != null && node.getElement().getKey().compareTo(key) != 0){
+        	node = node.getNext();
         }
-			
-        
 
         if (node != null)
         	return (node.getElement()).getValue();
@@ -61,12 +56,22 @@ public class OrderedDoubleList <K extends Comparable <K>, V> implements OrderedD
 			DListNode<Entry <K, V>> node = head;
 	        while (node != null && node.getElement().getKey().compareTo(key) < 0)
 	        	node = node.getNext();
-        
 	        if (node != null){
 	        	if (node.getElement().getKey().equals(key)){
-	        		DListNode<Entry <K, V>> updatedNode = getNewNode(key, value);
+	        		DListNode<Entry<K, V>> updatedNode = getNewNode(key, value);
 	        		V oldValue = node.getElement().getValue();
-	        		node = updatedNode;
+	        		
+	        		updatedNode.setNext(node.getNext());
+	        		updatedNode.setPrevious(node.getPrevious());
+	        		if(node != head)
+	        			node.getPrevious().setNext(updatedNode);
+	        		else
+	        			head = updatedNode;
+	        		if(node != tail)
+	        			node.getNext().setPrevious(updatedNode);
+	        		else
+	        			tail = updatedNode;
+	        		
 	        		return oldValue;
 	        	}
 	        	else/*if it's bigger - we need to add our node in front of else node*/{
@@ -85,6 +90,9 @@ public class OrderedDoubleList <K extends Comparable <K>, V> implements OrderedD
 	protected DListNode<Entry <K, V>> getNewNode(K key, V value){
 		Entry<K, V> entry = new EntryClass<K, V>(key, value);
 		DListNode<Entry <K, V>> newNode = new DListNode<Entry <K, V>>(entry);
+
+
+
 		return newNode;
 	}
 	
@@ -120,6 +128,12 @@ public class OrderedDoubleList <K extends Comparable <K>, V> implements OrderedD
 
 		if(node == null)
 			return null;
+		else if(currentSize == 1){
+			currentSize = 0;
+			tail = null;
+			head = null;
+			return node.getElement().getValue();
+		}
 		else if(node == head){
 			DListNode<Entry <K, V>> nextNode = node.getNext();
 			nextNode.setPrevious(null);
@@ -159,11 +173,10 @@ public class OrderedDoubleList <K extends Comparable <K>, V> implements OrderedD
 	protected DListNode<Entry <K, V>> findNode (K key){
 		
 		DListNode<Entry <K, V>> node = head;
-		
-		while (node != null & node.getElement().getKey().compareTo(key) != 0){
-			node.getNext();
+		while (node != null && node.getElement().getKey().compareTo(key) != 0){
+			node = node.getNext();
 		}
-			return node;
+		return node;
 	}
 
 	public Iterator<Entry<K, V>> iterator() {

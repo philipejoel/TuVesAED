@@ -7,6 +7,7 @@ package tuVes;
 
 import java.io.Serializable;
 
+import dataStructures.AVLTree;
 import dataStructures.BinarySearchTree;
 import dataStructures.Entry;
 import dataStructures.IterableStack;
@@ -32,9 +33,7 @@ public class UserClass implements UserSetter, Serializable{
 	private String name;
 	@SuppressWarnings("unused")
 	private String email;
-	private Video video; //TO DELETE
 	private OrderedDictionary<String, Video> videos;
-	private Video favouriteVideo;
 	private OrderedDictionary<String, Video> favouriteVideos;
 	private IterableStack<Video> viewedHistroy;
 	
@@ -43,18 +42,15 @@ public class UserClass implements UserSetter, Serializable{
 		this.email = email;
 		this.name = name;
 		this.viewedHistroy = new StackInList<>();
-		this.favouriteVideo = null;
-		this.videos = new BinarySearchTree<>();
-		this.favouriteVideos = new BinarySearchTree<>();
-	}
+		this.videos = new AVLTree<>();
+		this.favouriteVideos = new AVLTree<>();
+		}
 	
 	public void addVideo(Video video) {
-		//this.video = video; //TO DELETE
 		this.videos.insert(video.getIdVideo().toLowerCase(), video); //Ask about efficiency 
 	}
 	
 	public void addVideoToFavourite(Video video) {
-		//this.favouriteVideo = video; TO DELETE
 		this.favouriteVideos.insert(video.getIdVideo().toLowerCase(), video);
 	}
 	
@@ -63,10 +59,6 @@ public class UserClass implements UserSetter, Serializable{
 	}
 	
 	public boolean isFavourite(String idVideo){
-//		if (favouriteVideo == null)
-//			return false;
-//		else
-//			return favouriteVideo.getIdVideo().equals(idVideo);
 		return favouriteVideos.find(idVideo.toLowerCase()) != null;
 	}
 	
@@ -77,19 +69,11 @@ public class UserClass implements UserSetter, Serializable{
 		else
 			return viewedHistroy.iterator();	
 	}
-	
-	/*public String favouriteVideos() {
-		return this.favouriteVideo.getVideoInfo();
-	}*/
-	
+		
 	public Iterator<Entry<String, Video>> getFavouriteVideosIterator(){
 		return favouriteVideos.iterator();
 	}
 
-	/*public String listVideos() {
-		return this.video.getVideoInfo();
-	}*/
-	
 	public Iterator<Entry<String, Video>> getVideosIterator(){
 		return videos.iterator();
 	}
@@ -107,7 +91,6 @@ public class UserClass implements UserSetter, Serializable{
 	}
 	
 	public void removeVideoFromFavourite(String idVideo) {
-//		favouriteVideo = null;
 		favouriteVideos.remove(idVideo.toLowerCase());
 	}
 	

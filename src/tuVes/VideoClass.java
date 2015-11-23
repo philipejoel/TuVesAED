@@ -19,7 +19,7 @@ public class VideoClass implements VideoSetter, Serializable{
 /***
 * @idVideo - id of video
 * @title - title of video
-* @tag - tag assigned to video by user
+* @tags - tags assigned to video by user
 * @url - link to video
 * @isDisabled - boolean value which determinate if video is disabled
 * @length - duration of video

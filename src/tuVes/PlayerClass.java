@@ -7,11 +7,12 @@ package tuVes;
 
 import java.io.Serializable;
 
-import dataStructures.BinarySearchTree;
+import dataStructures.AVLTree;
 import dataStructures.ChainedHashTable;
 import dataStructures.Entry;
 import dataStructures.Iterator;
 import dataStructures.OrderedDictionary;
+import dataStructures.Dictionary;
 import exceptions.AlreadyFavouriteException;
 import exceptions.AlreadyHasTagException;
 import exceptions.DisabledVideoException;
@@ -35,11 +36,9 @@ public class PlayerClass implements Player, Serializable{
 * @tags Chained hash table of tags added to the system
 ***/
 	private static final long serialVersionUID = 1L;
-	private OrderedDictionary<String, UserSetter> users;
-	private OrderedDictionary<String, VideoSetter> videos;
-//	private ChainedHashTable<String, VideoSetter> tags;
-	
-	private OrderedDictionary<String, OrderedDictionary<String, Video>> tags;
+	private Dictionary<String, UserSetter> users;
+	private Dictionary<String, VideoSetter> videos;
+	private Dictionary<String, OrderedDictionary<String, Video>> tags;
 
 	
     public static final int USER_INIT_CAPPACITY = 30;
@@ -48,9 +47,9 @@ public class PlayerClass implements Player, Serializable{
 
 
 	public PlayerClass(){
-		users = new BinarySearchTree<String, UserSetter>();
-		videos = new BinarySearchTree<String, VideoSetter>();
-		tags = new BinarySearchTree<String, OrderedDictionary<String, Video>>();
+		users = new ChainedHashTable<String, UserSetter>();
+		videos = new ChainedHashTable<String, VideoSetter>();
+		tags = new ChainedHashTable<String, OrderedDictionary<String, Video>>();
 	}
 	
 	public void insertUser(String nick, String email, String name) throws UserAlreadyExistException{
@@ -84,7 +83,7 @@ public class PlayerClass implements Player, Serializable{
 			throws NoSuchVideoException, DisabledVideoException{
 
 		VideoSetter v = videos.find(idVideo.toLowerCase());
-		if (v == null)//SOLVE
+		if (v == null)
 			throw new NoSuchVideoException();
 		else if (v.isVideoDisabled())
 			throw new DisabledVideoException();
@@ -97,25 +96,15 @@ public class PlayerClass implements Player, Serializable{
 		
 		VideoSetter v = videos.find(idVideo.toLowerCase());
 		UserSetter u = users.find(nick.toLowerCase());
-		if (v == null)//SOLVE
+		if (v == null)
 			throw new NoSuchVideoException();
 		else if (v.isVideoDisabled())
 			throw new DisabledVideoException();
-		else if (u == null)//SOLVE
+		else if (u == null)
 			throw new NoSuchUserException();
 		else
 			u.addVideoToHistory(v);
 	}
-	
-	/*public String listUserVideos(String nick) throws NoSuchUserException, UserHasNoVideosException{
-		UserSetter u = users.find(nick.toLowerCase());
-		if (u == null)
-			throw new NoSuchUserException();
-		else if (!u.hasVideo())
-			throw new UserHasNoVideosException();
-		else
-			return u.listVideos();
-	}*/
 	
 	public Iterator<Entry<String, Video>> getUserVideosIterator(String nick) 
 throws NoSuchUserException, UserHasNoVideosException{
@@ -133,7 +122,7 @@ throws NoSuchUserException, UserHasNoVideosException{
 			throws NoSuchUserException, EmptyHistoryException {
 
 		UserSetter u = users.find(nick.toLowerCase());
-		if (u == null)//SOLVE
+		if (u == null)
 			throw new NoSuchUserException();
 		else if (!u.hasHistory())
 			throw new EmptyHistoryException();
@@ -184,18 +173,6 @@ throws NoSuchUserException, UserHasNoVideosException{
 			u.removeVideoFromFavourite(idVideo);
 	}
 	
-	/*public String listFavourites(String nick) 
-			throws NoSuchUserException, NoFavouritesException{
-
-		UserSetter u = users.find(nick.toLowerCase());
-		if (u == null)
-			throw new NoSuchUserException();
-		else if (!u.hasFavourite())
-			throw new NoFavouritesException();
-		else
-			return u.favouriteVideos();
-	}*/
-	
 	public Iterator<Entry<String, Video>> listFavouritesIterator(String nick) 
 			throws NoSuchUserException, NoFavouritesException{
 
@@ -226,7 +203,7 @@ throws NoSuchUserException, UserHasNoVideosException{
 				currentTagVideos.insert(idVideo.toLowerCase(), v);
 			}
 			else{
-				OrderedDictionary<String, Video> newTag = new BinarySearchTree<String, Video>();
+				OrderedDictionary<String, Video> newTag = new AVLTree<String, Video>();
 				newTag.insert(idVideo.toLowerCase(), v);
 				tags.insert(tag.toLowerCase(), newTag);
 			}
@@ -245,15 +222,6 @@ throws NoSuchUserException, UserHasNoVideosException{
 			return v.getTags();
 	}
 	
-	/*public String searchTag(String tag) 
-		throws NoSuchTagException{
-		
-		Video v = tags.find(tag.toLowerCase());
-		if (v == null)
-			throw new NoSuchTagException();
-		else
-			return v.getVideoInfo();	
-	}*/
 	
 	public Iterator<Entry<String, Video>> getTagVideosIterator(String tag) 
 		throws NoSuchTagException{

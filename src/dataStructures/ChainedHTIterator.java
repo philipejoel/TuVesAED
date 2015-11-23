@@ -43,7 +43,7 @@ public class ChainedHTIterator<K,V> implements TwoWayIterator<Entry <K,V>>{
 	}
 		
 	public boolean hasNext() {
-		if(currentDicIterator.hasNext())
+		if(currentDicIterator != null && currentDicIterator.hasNext())
 			return true;
 		else{
 			for(int i = currentIndex+1; i < table.length; i++){
