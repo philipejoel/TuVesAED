@@ -1,6 +1,9 @@
-package dataStructures;
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
 
-import exceptions.NoSuchElementException;
+package dataStructures;
 
 class DoublyLLIterator<E> implements TwoWayIterator<E>
 {
@@ -34,8 +37,8 @@ class DoublyLLIterator<E> implements TwoWayIterator<E>
     // next will return the first element in the iteration.
     public void rewind( )
     {
-        nextToReturn = firstNode;
-        prevToReturn = null;
+        this.nextToReturn = firstNode;
+        this.prevToReturn = null;
     }
 
 
@@ -72,7 +75,7 @@ class DoublyLLIterator<E> implements TwoWayIterator<E>
     public E next( ) throws NoSuchElementException
     {
         if ( !this.hasNext() )
-            throw new NoSuchElementException();
+           	throw new NoSuchElementException();
 
         E element = nextToReturn.getElement();
         prevToReturn = nextToReturn.getPrevious();

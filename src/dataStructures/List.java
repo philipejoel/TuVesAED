@@ -1,9 +1,11 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package dataStructures;
 
 import java.io.Serializable;
-
-import exceptions.EmptyListException;
-import exceptions.InvalidPositionException;
 
 public interface List<E> extends Serializable
 {
@@ -62,7 +64,9 @@ public interface List<E> extends Serializable
     // and returns true, if the list contains the element.
     // Otherwise, returns false.
     boolean remove( E element );
-
+    
+	// Remove all of the elements from list
 	void clear();
+
 }   
 

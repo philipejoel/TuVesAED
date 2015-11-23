@@ -1,23 +1,40 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package tuVes;
 
-import java.util.Iterator;
-import java.util.StringTokenizer;
 
+import dataStructures.Entry;
+import dataStructures.Iterator;
 import exceptions.EmptyHistoryException;
 
 public interface User {
-	public void addVideo(Video video);
-	public void addVideoToFavourite(Video video);
-	public void removeVideoFromFavourite(StringTokenizer idVideo);
-	public void addVideoToHistory(Video video);
-	//public Iterator<String> historyOfViewedVideosIterator();
-	public boolean isFavourite(StringTokenizer idVideo);
+		
+	// Returns true if the video if one of the user's favourite videos. Returns false if it isn't.
+	public boolean isFavourite(String idVideo);
+	
+	// Returns an iterator of the user's viewed videos.
 	public Iterator<Video> viewedVideosIterator() 
 			throws EmptyHistoryException;
-	//public Iterator<String> favouriteVideosIterator();
-	public String favouriteVideos();
-	public void removeViewedHistory();
+	
+	// Returns information related to the user's favourite videos.
+	public Iterator<Entry<String, Video>> getFavouriteVideosIterator();
+	
+	//Returns information about user's videos.
+	public Iterator<Entry<String, Video>> getVideosIterator();
+	
+	// Returns true if the user viewed at least one video after cleaning the history.
 	public boolean hasHistory();
+	
+	// Returns true if the user has at least one favourite video.
 	public boolean hasFavourite();
+	
+	// Returns the user's nick.
+	public String getNick();
+	
+	// Returns true if the user has any video (inserted by him).
+	boolean hasVideo();
 	
 }

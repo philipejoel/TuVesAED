@@ -1,6 +1,9 @@
-package dataStructures;
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
 
-import exceptions.NoSuchElementException;
+package dataStructures;
 
 public interface TwoWayIterator<E> extends Iterator<E>
 {

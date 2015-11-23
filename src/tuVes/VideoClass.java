@@ -1,59 +1,95 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package tuVes;
 
-import java.util.StringTokenizer;
+import java.io.Serializable;
 
-public class VideoClass implements Video {
 
-	private StringTokenizer idVideo;
+import dataStructures.DoublyLinkedList;
+import dataStructures.IterableQueue;
+import dataStructures.Iterator;
+import dataStructures.List;
+import dataStructures.QueueInList;
+
+public class VideoClass implements VideoSetter, Serializable{
+	private static final long serialVersionUID = 1L;
+/***
+* @idVideo - id of video
+* @title - title of video
+* @tags - tags assigned to video by user
+* @url - link to video
+* @isDisabled - boolean value which determinate if video is disabled
+* @length - duration of video
+***/
+	private String idVideo;
 	private String title;
-	private StringTokenizer tag;
-	private StringTokenizer url;
+	private IterableQueue<String> tags;
+	@SuppressWarnings("unused")
+	private String url;
 	private boolean isDisabled;
 	private long length;
 	
-	
-	public VideoClass(StringTokenizer idVideo, String title, StringTokenizer url, long length){
+	public VideoClass(String idVideo, String title, String url, long length){
 		this.idVideo = idVideo;
 		this.title = title;
 		this.url = url;
 		this.isDisabled = false;
-		tag = null;
+		tags = new QueueInList<String>();
 		this.length = length;
 	}
-	public StringTokenizer getIdVideo(){
+	
+	public String getIdVideo(){
 		return idVideo;
 	}
+	
 	public String getTitle(){
 		return title;
 	}
+	
 	public long getLength(){
 		return length;
 	}
+	
 	public String getStatus(){
-		return isDisabled? "inactivo" : "activo";
+		return isDisabled? "inativo" : "ativo";
 	}
+	
 	public void disableVideo() {
 		isDisabled = true;
 	}
+	
 	public boolean isVideoDisabled() {
 		return isDisabled;
 	}
-	public void addTagToVideo(StringTokenizer tag) {
-		this.tag = tag;
+	
+	public void addTagToVideo(String tag) {
+		tags.enqueue(tag);
 	}
-	public boolean hasTags(){
-		return (tag != null);
+	
+	public boolean hasAnyTag(){
+		return (!tags.isEmpty());
+	}	
+	
+	public boolean hasTag(String tag){
+		Iterator<String> tagIterator = tags.iterator();
+		while(tagIterator.hasNext()){
+			if(tagIterator.next().equalsIgnoreCase(tag)){
+				return true;
+			}
+		}
+		return false;
 	}
-	public StringTokenizer getTags(){
-		return tag;
+	
+	public Iterator<String> getTags(){
+		return tags.iterator();
 	}
-	public StringTokenizer listTags() {
-		return tag;
-	}
+	
 	public String getVideoInfo(){
 		return (getIdVideo() + " " + getTitle() +  " " +
-	getLength() +  " " + getStatus()+"\n");
+				getLength() +  " " + getStatus());
 	}
-
 
 }

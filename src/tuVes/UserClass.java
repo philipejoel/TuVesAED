@@ -1,47 +1,67 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package tuVes;
 
-import java.util.Iterator;
-import java.util.Stack; //Change to dataStructures.Stack later
-import java.util.StringTokenizer;
+import java.io.Serializable;
 
+import dataStructures.AVLTree;
+import dataStructures.BinarySearchTree;
+import dataStructures.Entry;
+import dataStructures.IterableStack;
+import dataStructures.Iterator;
+import dataStructures.OrderedDictionary;
+import dataStructures.StackInList;
 import exceptions.EmptyHistoryException;
 
 
-public class UserClass implements User {
+public class UserClass implements UserSetter, Serializable{
 	
-	public StringTokenizer nick;
-	public String name;
-	public StringTokenizer email;
-	public Video videos;
-	public Video favouriteVideos;
-	public Stack<Video> viewedHistroy;
+/***
+* @nick - User nick
+* @name - User name
+* @email - User email
+* @video - Video added by user
+* @favouriteVideo - User favourite video
+* @viewedHistroy - History of viewed videos by user
+***/
+	private static final long serialVersionUID = 1L;
+	private String nick;
+	@SuppressWarnings("unused")
+	private String name;
+	@SuppressWarnings("unused")
+	private String email;
+	private OrderedDictionary<String, Video> videos;
+	private OrderedDictionary<String, Video> favouriteVideos;
+	private IterableStack<Video> viewedHistroy;
 	
-	public UserClass(StringTokenizer nick, StringTokenizer email, String name){
+	public UserClass(String nick, String email, String name){
 		this.nick = nick;
 		this.email = email;
 		this.name = name;
+		this.viewedHistroy = new StackInList<>();
+		this.videos = new AVLTree<>();
+		this.favouriteVideos = new AVLTree<>();
+		}
+	
+	public void addVideo(Video video) {
+		this.videos.insert(video.getIdVideo().toLowerCase(), video); //Ask about efficiency 
 	}
 	
-	@Override
-	public void addVideo(Video video) {
-		this.videos = video;
-	}
-
-	@Override
 	public void addVideoToFavourite(Video video) {
-		this.favouriteVideos = video;
+		this.favouriteVideos.insert(video.getIdVideo().toLowerCase(), video);
 	}
-
-	@Override
+	
 	public void addVideoToHistory(Video video) {
 		viewedHistroy.push(video);
 	}
 	
-	public boolean isFavourite(StringTokenizer idVideo){
-		return favouriteVideos.getIdVideo().equals(idVideo);
+	public boolean isFavourite(String idVideo){
+		return favouriteVideos.find(idVideo.toLowerCase()) != null;
 	}
-
-	@Override
+	
 	public Iterator<Video> viewedVideosIterator() 
 			throws EmptyHistoryException {
 		if(viewedHistroy.isEmpty())
@@ -49,30 +69,36 @@ public class UserClass implements User {
 		else
 			return viewedHistroy.iterator();	
 	}
-
-	@Override
-	public String favouriteVideos() {
-		return this.favouriteVideos.getVideoInfo();
+		
+	public Iterator<Entry<String, Video>> getFavouriteVideosIterator(){
+		return favouriteVideos.iterator();
 	}
 
-	@Override
+	public Iterator<Entry<String, Video>> getVideosIterator(){
+		return videos.iterator();
+	}
+	
 	public void removeViewedHistory() {
 		this.viewedHistroy.clear();
 	}
 	
 	public boolean hasHistory(){
-		return viewedHistroy.isEmpty();
+		return !viewedHistroy.isEmpty();
 	}
 	
 	public boolean hasFavourite(){
-		return (favouriteVideos != null);
+		return !favouriteVideos.isEmpty();
 	}
-
-	@Override
-	public void removeVideoFromFavourite(StringTokenizer idVideo) {
-		// TODO Auto-generated method stub
-		favouriteVideos = null;
-	}
-
 	
+	public void removeVideoFromFavourite(String idVideo) {
+		favouriteVideos.remove(idVideo.toLowerCase());
+	}
+	
+	public String getNick() {
+		return this.nick;
+	}
+	
+	public boolean hasVideo(){
+		return !videos.isEmpty();
+	}
 }

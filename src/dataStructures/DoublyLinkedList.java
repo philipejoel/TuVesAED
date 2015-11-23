@@ -1,7 +1,9 @@
-package dataStructures;
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
 
-import exceptions.EmptyListException;
-import exceptions.InvalidPositionException;
+package dataStructures;
 
 public class DoublyLinkedList<E> implements List<E>
 {   
@@ -299,19 +301,29 @@ public class DoublyLinkedList<E> implements List<E>
 
     // Removes all of the elements from the specified list and
     // inserts them at the end of the list (in proper sequence).
-    public void append( DoublyLinkedList<E> list )
-    {
-        //TODO: Left as an exercise.
+	public void append( DoublyLinkedList<E> list ){
+    	if (isEmpty()){
+    		this.head = list.head;
+    		this.tail = list.tail;
+    		this.currentSize = list.currentSize;
+    	}
+    	else{
+    		this.tail.setNext(list.head);
+    		list.head.setPrevious(this.tail);
+    		this.tail = list.tail;
+    		this.currentSize += list.currentSize;
+    	}
     }
 
 
-	@Override
-	public void clear() 
-	{
-		head = null;
+	// Remove all of the elements from list
+	public void clear() {
+        head = null;
         tail = null;
-        currentSize = 0;		
+        currentSize = 0;	
 	}
+
+
 }   
 
 

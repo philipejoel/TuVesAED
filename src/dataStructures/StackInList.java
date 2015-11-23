@@ -1,8 +1,11 @@
+/**
+ * @author FilipeAlmeida (45047) <fjf.almeida@campus.fct.unl.pt>
+ * @author PrzemyslawFalowski (46978) <p.falowski@campus.fct.unl.pt>
+ */
+
 package dataStructures;
 
-import exceptions.EmptyStackException;
-
-public class StackInList<E> implements Stack<E>
+public class StackInList<E> implements IterableStack<E>
 {
 
     static final long serialVersionUID = 0L;
@@ -57,10 +60,15 @@ public class StackInList<E> implements Stack<E>
 
         return list.removeFirst();
     }
-    
-    public void clear(){
-    	list.clear();
-    }
 
+    // Remove all elements from the stack.
+	public void clear() {
+		list.clear();
+	}
+	
+	// Returns an iterator of the elements in the stack (in proper sequence).
+	public Iterator<E> iterator(){
+		return list.iterator();
+	}
 
 }
